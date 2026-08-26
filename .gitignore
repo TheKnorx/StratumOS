@@ -53,3 +53,11 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# custom ignored stuff
+targets/x86_64/iso/boot/kernel.bin
+src/stuff
+src/cmake-build-debug
+build/
+dist/
+.idea/
