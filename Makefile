@@ -32,3 +32,6 @@ build-x86_64: $(x86_64_asm_object_files)
 
 run:
 	terminator -e "qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso"
+
+clean:
+	rm -R ./build/ ./dist targets/x86_64/iso/boot/kernel.bin
