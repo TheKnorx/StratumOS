@@ -30,8 +30,10 @@ build-x86_64: $(x86_64_asm_object_files)
 		-o $(x86_64_dist_path)/kernel.iso \
 		$(x86_64_target_path)/iso
 
-run:
+.PHONY: run
+run: build-x86_64
 	terminator -e "qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso"
 
+.PHONY: clean
 clean:
 	rm -R ./build/ ./dist targets/x86_64/iso/boot/kernel.bin
