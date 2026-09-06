@@ -99,6 +99,7 @@ enable_A20_fast_gate:
 
     .ret:ret
 
+; --------------------------------------------------
 bits 16
 
 ; (From the wiki:) Most BIOSes provide a function in interrupt 0x15 to quickly enable the A20 gate
