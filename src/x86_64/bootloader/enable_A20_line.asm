@@ -42,6 +42,7 @@ is_A20_on:
 
 ; Try to enable the A20 line by using the keyboard controller
 ; This function has no return value
+global  enable_A20_keyboard_controller
 enable_A20_keyboard_controller:
         cli                     ; disable interrupts
 
@@ -86,6 +87,7 @@ enable_A20_keyboard_controller:
 
 ; Try to enable the A20 Line using the Fast A20 Gate method
 ; This function has no return value
+global  enable_A20_fast_gate
 enable_A20_fast_gate:
     in al, 0x92
     test al, 2
