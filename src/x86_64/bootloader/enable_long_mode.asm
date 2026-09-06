@@ -73,6 +73,7 @@ queryLongMode:
 ; Continues to A20_on if A20 line is set.
 ; Returns eax = 1 if the A20 line is set; 0 otherwise
 ; Written by Elad Ashkcenazi - modified by Knorx
+global is_A20_on
 is_A20_on:
     push    edi
     push    esi
