@@ -41,7 +41,7 @@ is_A20_on:
         ret
 
 ; Try to enable the A20 line by using the keyboard controller
-enable_A20_keyCon:
+enable_A20_keyboard_controller:
         cli                     ; disable interrupts
 
         call    .a20wait
