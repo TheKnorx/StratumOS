@@ -21,6 +21,7 @@ bits 32
 ; Check A20 line
 ; Returns to caller if A20 gate is cleared.
 ; Continues to A20_on if A20 line is set.
+; Written by Elad Ashkcenazi - modified by Knorx
 ; Returns eax = 1 if the A20 line is set; 0 otherwise
 ; Written by Elad Ashkcenazi - modified by Knorx
 global is_A20_on
