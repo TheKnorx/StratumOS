@@ -43,3 +43,42 @@ is_A20_on:
     .A20_off:
         move    eax, 0
         ret
+
+bits 16
+
+; (From the wiki:) Most BIOSes provide a function in interrupt 0x15 to quickly enable the A20 gate
+; Returns eax = 1 if the A20 line is set; 0 if its not supported;
+; -1 if the state of the gate could not be retrieved; -2 is the gate could not be actived
+enable_A20_bios:
+    mov     ax, 0x2403      ; Query A20 gate support
+    int     0x15
+    jc      a20_nis         ; INT 0x15 is not supported
+    test    ah, ah
+    jnz     a20_nis         ; INT 0x15 is not supported
+
+    mov     ax, 0x2402      ; Get A20 gate status
+    int     0x15
+    jc      a20_ngs         ; Couldn't get status
+    test    ah, ah
+    jnz     a20_ngs         ; Couldn't get status
+    test    al, al
+    jnz     a20_activated   ; AL = 1, A20 gate is already activated
+
+    mov     ax, 0x2401      ; Activate A20 gate
+    int     0x15
+    jc      a20_failed      ; Couldn't activate the gate
+    test    ah, ah
+    jnz     a20_failed      ; Couldn't activate the gate
+
+    .a20_nis:   ; INT 0x15 is not supported by BIOS (no interrupt support)
+        mov     eax, 0
+        ret
+    .a20_ngs:   ; the A20 gate state could not be retrieved (no gate state)
+        mov     eax, -1
+        ret
+    .a20_na:    ; the A20 gate could not be actived (no activation)
+        mov     eax, -2
+        ret
+    a20_activated:
+        mov     eax, 1
+        ret
