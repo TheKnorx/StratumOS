@@ -66,6 +66,14 @@ queryLongMode:
     	mov 	eax, 0
     	ret		
 
+; Disables 32-Bit paging (this may or may not be set up already, but disable it anyways)
+global  disablePaging32
+disablePaging32:
+    mov eax, cr0            ; move control register cr0 into eax
+    and eax, ~CR0_PAGING    ; flip all bits of CR0_PAGING so that only the bit
+                            ; we specified is cleared and the rest of cr0 is preserved
+    mov cr0, eax            ; copy the modified cr0 from eax into cr0
+    ret
 
 section .data
 EFLAGS_ID 			equ 1 << 21   	; if this bit can be flipped, the CPUID instruction is available
