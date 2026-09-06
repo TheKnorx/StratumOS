@@ -41,6 +41,7 @@ is_A20_on:
         ret
 
 ; Try to enable the A20 line by using the keyboard controller
+; This function has no return value
 enable_A20_keyboard_controller:
         cli                     ; disable interrupts
 
