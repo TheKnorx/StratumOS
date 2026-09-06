@@ -35,7 +35,7 @@ check_multiboot:
     je      .ret        ; if we were bootes by multiboot, continue
 
     .no_multiboot:      ; else print an error message
-        mov     rdi, err_no_multiboot
+        mov     edi, err_no_multiboot
         call    print_str
 
     .ret: ret
