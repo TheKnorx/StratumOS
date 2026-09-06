@@ -89,11 +89,13 @@ enable_A20_keyboard_controller:
 enable_A20_fast_gate:
     in al, 0x92
     test al, 2
-    jnz .done
+    jnz .ret
 
     or al, 2
     and al, 0xfe
     out 0x92, al
+
+    .ret:ret
 
 bits 16
 
