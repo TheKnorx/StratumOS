@@ -84,6 +84,17 @@ enable_A20_keyboard_controller:
             jz      a20wait2
             ret
 
+; Try to enable the A20 Line using the Fast A20 Gate method
+; This function has no return value
+enable_A20_fast_gate:
+    in al, 0x92
+    test al, 2
+    jnz .done
+
+    or al, 2
+    and al, 0xfe
+    out 0x92, al
+
 bits 16
 
 ; (From the wiki:) Most BIOSes provide a function in interrupt 0x15 to quickly enable the A20 gate
