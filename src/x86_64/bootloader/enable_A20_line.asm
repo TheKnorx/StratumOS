@@ -1,4 +1,20 @@
 ; File for handling the A20 line
+;
+; From wiki.osdev.org:
+;
+; Recommended Method
+; Because there are several different methods that may or may not be supported,
+; and because some of them cause problems on some computers; the recommended method
+; is to try all of them until one works in the "order of least risk". Essentially:
+;
+; Test if A20 is already enabled - if it is you don't need to do anything at all
+; Try the BIOS function. Ignore the returned status.
+; Test if A20 is enabled (to see if the BIOS function actually worked or not)
+; Try the keyboard controller method.
+; Test if A20 is enabled in a loop with a time-out (as the keyboard controller method may work slowly)
+; Try the Fast A20 method last
+; Test if A20 is enabled in a loop with a time-out (as the fast A20 method may work slowly)
+; If none of the above worked, give up
 
 ; Check A20 line
 ; Returns to caller if A20 gate is cleared.
