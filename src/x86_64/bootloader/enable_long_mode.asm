@@ -64,7 +64,8 @@ queryLongMode:
     jz 		.NoLongMode 
 
     mov 	eax, 1
-    .NoLongMode	
+    ret
+    .NoLongMode:
     	mov 	eax, 0
     	ret		
 
