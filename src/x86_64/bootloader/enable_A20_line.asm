@@ -16,6 +16,8 @@
 ; Test if A20 is enabled in a loop with a time-out (as the fast A20 method may work slowly)
 ; If none of the above worked, give up
 
+bits 32
+
 ; Check A20 line
 ; Returns to caller if A20 gate is cleared.
 ; Continues to A20_on if A20 line is set.
