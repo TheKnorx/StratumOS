@@ -51,6 +51,7 @@ bits 16
 ; (From the wiki:) Most BIOSes provide a function in interrupt 0x15 to quickly enable the A20 gate
 ; Returns eax = 1 if the A20 line is set; 0 if its not supported;
 ; -1 if the state of the gate could not be retrieved; -2 is the gate could not be actived
+global  enable_A20_bios
 enable_A20_bios:
     mov     ax, 0x2403      ; Query A20 gate support
     int     0x15
