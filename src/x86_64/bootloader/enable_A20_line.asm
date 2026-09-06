@@ -46,6 +46,49 @@ is_A20_on:
         move    eax, 0
         ret
 
+; Try to enable the A20 line by using the keyboard controller
+enable_A20_keyCon:
+        cli                     ; disable interrupts
+
+        call    .a20wait
+        mov     al,0xAD
+        out     0x64,al         ; disable keyboard
+
+        call    .a20wait
+        mov     al,0xD0
+        out     0x64,al         ; read controller output port
+
+        call    .a20wait2
+        in      al,0x60         ; save response byte
+        push    eax
+
+        call    .a20wait
+        mov     al,0xD1
+        out     0x64,al         ; write next byte into controller output port
+
+        call    .a20wait
+        pop     eax
+        or      al,2            ; set controller output bit for A20 on
+        out     0x60,al         ; activate A20
+
+        call    .a20wait
+        mov     al,0xAE
+        out     0x64,al         ; reactivate keyboard
+
+        call    .a20wait
+        sti                     ; reactivate interrupts
+        ret
+    .a20wait:                   ; wait until input buffer is clear
+            in      al,0x64
+            test    al,2
+            jnz     a20wait
+            ret
+    .a20wait2:                  ; wait until response byte has arrived
+            in      al,0x64
+            test    al,1
+            jz      a20wait2
+            ret
+
 bits 16
 
 ; (From the wiki:) Most BIOSes provide a function in interrupt 0x15 to quickly enable the A20 gate
