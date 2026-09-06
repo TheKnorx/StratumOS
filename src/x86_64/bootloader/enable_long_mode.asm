@@ -80,3 +80,4 @@ EFLAGS_ID 			equ 1 << 21   	; if this bit can be flipped, the CPUID instruction 
 CPUID_EXTENSIONS 	equ 0x80000000 	; returns the maximum extended requests for cpuid
 CPUID_EXT_FEATURES 	equ 0x80000001 	; returns flags containing long mode support among other things
 CPUID_EDX_EXT_FEAT_LM equ 1 << 29   ; if this is set, the CPU supports long mode
+CR0_PAGING          equ 1 << 31     ; bit for enabeling or disabeling paging on protected- and long-mode
