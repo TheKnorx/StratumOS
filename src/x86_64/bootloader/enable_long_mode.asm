@@ -3,7 +3,9 @@
 ; To enable long mode, certain things have to be present and available:
 ; 1) CPUID must be supported
 ; 2) Extended requests have to be supported by the CPU
-; 3)  ...
+; 3) Enable the A20 Line (- physical representation of the 21st bit)
+; 4) Disable 32-Bit paging
+; 5) Enable 64-Bit paging
 
 section .text
 bits 32
