@@ -22,8 +22,6 @@ start:
     mov     edi, hello_message
     call    print_str
 
-    call    check_multiboot
-
     ; ToDo: Enable long mode, paging, ..., transfer control to C kernel
 
     mov     edi, hello_message
