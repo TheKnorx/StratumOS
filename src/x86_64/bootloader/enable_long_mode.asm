@@ -91,6 +91,7 @@ enablePaging:
 ; Enable 64-Bit PAE (Physical Address Extension) paging, which includes:
 ; Page Map Level 4 Table (PML4T), Page Directory Pointer Table (PDPT),
 ; Page Directory Table (PDT), Page Table (PT);
+global  setupPaging64
 setupPaging64:
     ; preserve registers
     push    edi
