@@ -92,6 +92,10 @@ enablePaging:
 ; Page Map Level 4 Table (PML4T), Page Directory Pointer Table (PDPT),
 ; Page Directory Table (PDT), Page Table (PT);
 setupPaging64:
+    ; preserve registers
+    push    edi
+    push    ebx
+
     mov     edi, PML4T_ADDR
     mov     cr3, edi        ; cr3 lets the CPU know where the page tables are
 
@@ -126,6 +130,10 @@ setupPaging64:
     mov     eax, cr4
     or      eax, CR4_PAE_ENABLE
     mov     cr4, eax
+
+    ; restore registers
+    pop     ebx
+    pop     rdi
 
 section .rodate  ; we can define those labels as constants and make them read only
 ; CPUID/LM constants
