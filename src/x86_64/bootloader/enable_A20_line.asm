@@ -134,7 +134,7 @@ try_enable_A20:
     ; EBX will store the address to jmp to after 'check_A20' is finished
 
     ; first check if the A20 line is already enabled
-    mov     ebx, try_bios   ; fill the "return-label"
+    mov     ebx, .try_bios  ; fill the "return-label"
     jmp     .check_A20
     
     .try_bios:
@@ -142,7 +142,7 @@ try_enable_A20:
     call    enable_A20_bios
     test    eax, eax 
     jz      .try_key_cont   ; only jump to the next method if the bios method failed explicitly;
-    mov     ebx, try_key_cont
+    mov     ebx, .try_key_cont
     call    .check_A20      ; else we recheck with 'is_A20_on'
 
     .try_key_cont:
