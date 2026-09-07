@@ -15,7 +15,7 @@
 section .text
 bits 32
 
-extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging
+extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging, setupPaging64
 
 global start
 start:
@@ -55,6 +55,7 @@ start:
 .disable_32Paging:
     call    disablePaging       ; has no return value
 .enable_64Paging:
+    call    setupPaging64       ; set up paging for 64 bit
     call    enablePaging        ; has no return value
 
     ; ToDo: enable long mode, transerfer control to C kernel
