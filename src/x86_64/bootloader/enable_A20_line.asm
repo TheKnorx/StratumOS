@@ -49,6 +49,22 @@ is_A20_on:
         mov     eax, 0
         ret
 
+; Check whether A20 became enabled (through a slow method) with a timeout.
+; Timeout: 65,536 iterations
+; Returns eax = 1 if the A20 line is set; 0 otherwise
+is_A20_on_slow:
+    xor     cx,cx           ; CX=0 -> LOOP executes 65,536 times
+    .check:
+        call    is_A20_on
+        jnz     .enabled    ; if eax=1, A20 is enabled
+        loop    .check      ; increment cx (if possible) and continue looping
+        ; cx reached the maximum value i.e. timed out
+        mov     eax, 1
+        ret
+    .enabled:
+        mov     eax, 0
+        ret
+
 ; Try to enable the A20 line by using the keyboard controller
 ; This function has no return value
 global  enable_A20_keyboard_controller
