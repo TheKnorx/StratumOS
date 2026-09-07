@@ -15,7 +15,7 @@
 section .text
 bits 32
 
-extern checkCPUID, queryLongMode, enable_A20, disablePaging32
+extern checkCPUID, queryLongMode, try_enable_A20, disablePaging32
 
 global start
 start:
@@ -44,7 +44,7 @@ start:
     HANDLE_ERROR err_no_LM  ; else throw an error
 .enable_A20:
     ; enable the A20 line if possible...
-    call    enable_A20
+    call    try_enable_A20
     ; Now if we did not succeed in enabling the A20 line,
     ; there is nothing left to do, so we have to give up.
     ; The only thing we can do is to inform the user about this

@@ -126,8 +126,8 @@ enable_A20_fast_gate:
 
 ; Function for trying all the methods for enabling the A20 line
 ; Returns eax = 1 if the A20 line is set; 0 otherwise;
-global  enable_A20
-enable_A20:
+global  try_enable_A20
+try_enable_A20:
     ; preserve registers
     push ebx
 
