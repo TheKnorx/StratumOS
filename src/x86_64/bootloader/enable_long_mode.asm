@@ -79,7 +79,47 @@ disablePaging32:
     mov cr0, eax            ; copy the modified cr0 from eax into cr0
     ret
 
-section .data
+; Enable 64-Bit PAE (Physical Address Extension) paging, which includes:
+; Page Map Level 4 Table (PML4T), Page Directory Pointer Table (PDPT),
+; Page Directory Table (PDT), Page Table (PT);
+setupPaging64:
+    mov     edi, PML4T_ADDR
+    mov     cr3, edi        ; cr3 lets the CPU know where the page tables are
+
+    ; First, clear the tables
+    xor     eax, eax
+    mov     ecx, SIZEOF_PAGE_TABLE
+    rep     stosd           ; writes 4 * SIZEOF_PAGE_TABLE bytes, which is enough space
+                            ; for the 4 page tables
+    mov     edi, cr3        ; reset edi back to the beginning of the page table
+
+    ; Next is to link up just the first entries of each table,
+    ; since 2 megabytes doesn't use more than one PDT entry.
+    ; EDI was previously set to PML4T_ADDR
+    mov     [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov     edi, PDPT_ADDR
+    mov     [edi], PDT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov     edi, PDT_ADDR
+    mov     [edi], PT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+
+    ; Now all that's left to do is fill the page table:
+    mov edi, PT_ADDR
+    mov ebx, PT_PRESENT | PT_READABLE
+    mov ecx, ENTRIES_PER_PT      ; 1 full page table addresses 2MiB
+
+    .SetEntry:
+        mov     [edi], ebx
+        add     ebx, PAGE_SIZE
+        add     edi, SIZEOF_PT_ENTRY
+        loop    .SetEntry       ; Set the next entry.
+
+    ; Now PAE can be enabled using the cr4 register
+    mov     eax, cr4
+    or      eax, CR4_PAE_ENABLE
+    mov     cr4, eax
+
+section .rodate  ; we can define those labels as constants and make them read only
+; CPUID/LM constants
 EFLAGS_ID 			equ 1 << 21   	; if this bit can be flipped, the CPUID instruction is available
 CPUID_EXTENSIONS 	equ 0x80000000 	; returns the maximum extended requests for cpuid
 CPUID_EXT_FEATURES 	equ 0x80000001 	; returns flags containing long mode support among other things
