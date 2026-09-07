@@ -5,8 +5,17 @@
 %define COLOR_FORMAT    0x1f
 %define VGA_BUFFER      0xB8000
 
+; macro for printing an error and stopping execution
+%macro HANDLE_ERROR 1
+    mov     edi, %1
+    call    print_str
+    jmp     $
+%endmacro
+
 section .text
 bits 32
+
+extern checkCPUID, queryLongMode, enable_A20, disablePaging32
 
 global start
 start:
@@ -22,10 +31,33 @@ start:
     mov     edi, hello_message
     call    print_str
 
-    ; ToDo: Enable long mode, paging, ..., transfer control to C kernel
-
-    mov     edi, hello_message
+.check_CPUID:  ; check if CPUID is supported
+    call    checkCPUID
+    test    eax, eax        ; check the return value
+    jnz     .check_extended ; if supported, continue
+    HANDLE_ERROR err_no_CPUID   ; else throw an error
+.check_extended:  ; check if the CPU supportes extended functions
+                  ; and if long mode is supported
+    call    queryLongMode
+    test    eax, eax        ; check the return value
+    jnz     .enable_A20     ; if supported, continue
+    HANDLE_ERROR err_no_LM  ; else throw an error
+.enable_A20:
+    ; enable the A20 line if possible...
+    call    enable_A20
+    ; Now if we did not succeed in enabling the A20 line,
+    ; there is nothing left to do, so we have to give up.
+    ; The only thing we can do is to inform the user about this
+    mov     edi, info_no_A20
     call    print_str
+.disable_32Paging:
+    call    disablePaging32  ; has no return value
+.enable_64Paging:
+    ; ToDo: add function call to enable 64 bit paging
+    nop
+
+    ; ToDo: enable long mode, transerfer control to C kernel
+    nop
 
     jmp     loop
 
@@ -66,10 +98,15 @@ loop:
 section .rodata
 hello_message:
     db      "Hello World!", 0
-
+info_no_A20:
+    db      "A20 line not supported. Continuing...", 0x00
 /* Error messages: */
 err_no_multiboot:
-    db      "Not loaded by mutliboot", 0
+    db      "Not loaded by mutliboot", 0x00
+err_no_CPUID:
+    db      "CPUID is not supported", 0x00
+err_no_LM:
+    db      "CPU does not support long mode"
 
 section .bss
 /*  Our stack area. */
