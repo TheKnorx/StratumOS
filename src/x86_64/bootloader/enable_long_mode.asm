@@ -124,4 +124,19 @@ EFLAGS_ID 			equ 1 << 21   	; if this bit can be flipped, the CPUID instruction 
 CPUID_EXTENSIONS 	equ 0x80000000 	; returns the maximum extended requests for cpuid
 CPUID_EXT_FEATURES 	equ 0x80000001 	; returns flags containing long mode support among other things
 CPUID_EDX_EXT_FEAT_LM equ 1 << 29   ; if this is set, the CPU supports long mode
-CR0_PAGING          equ 1 << 31     ; bit for enabeling or disabeling paging on protected- and long-mode
+
+; Paging constants
+CR0_PAGING          equ 1 << 31     ; CR0 bit for enabling or disabling paging on protected- and long-mode
+CR4_PAE_ENABLE      equ 1 << 5      ; CR4 bit for enabling or disabling PAE
+PML4T_ADDR          equ 0x1000      ; beginning of the PML4 Table
+SIZEOF_PAGE_TABLE   equ 4096        ; size of one page table
+PML4T_ADDR          equ 0x1000      ; address of the PML4T
+PDPT_ADDR           equ 0x2000      ; address of PDPT
+PDT_ADDR            equ 0x3000      ; address of PDT
+PT_ADDR             equ 0x4000      ; address of PT
+PT_ADDR_MASK        equ 0xffffffffff000 ; the page table only uses certain parts of the actual address
+PT_PRESENT          equ 1           ; marks the entry as in use
+PT_READABLE         equ 2           ; marks the entry as r/w
+ENTRIES_PER_PT      equ 512         ; entries per page table
+SIZEOF_PT_ENTRY     equ 8           ; size of one entry in the page level
+PAGE_SIZE           equ 0x1000      ; size of one page level
