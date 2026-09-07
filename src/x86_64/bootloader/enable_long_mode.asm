@@ -109,11 +109,11 @@ setupPaging64:
     ; Next is to link up just the first entries of each table,
     ; since 2 megabytes doesn't use more than one PDT entry.
     ; EDI was previously set to PML4T_ADDR
-    mov     [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
-    mov     edi, PDPT_ADDR
-    mov     [edi], PDT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
-    mov     edi, PDT_ADDR
-    mov     [edi], PT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov     dword [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov     dword edi, PDPT_ADDR
+    mov     dword [edi], PDT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov     dword edi, PDT_ADDR
+    mov     dword [edi], PT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
 
     ; Now all that's left to do is fill the page table:
     mov edi, PT_ADDR
@@ -134,6 +134,7 @@ setupPaging64:
     ; restore registers
     pop     ebx
     pop     rdi
+    ret
 
 section .rodate  ; we can define those labels as constants and make them read only
 ; CPUID/LM constants
