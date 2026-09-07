@@ -31,13 +31,13 @@ is_A20_on:
     mov     [edi],edi       ; (if A20 line is cleared the two pointers would point to the address 0x012345 that would contain 0x112345 (edi))
     cmp     edi, esi        ; compare addresses to see if the're equivalent.
 
-    jne     A20_on          ; if not equivalent, A20 line is set.
-    jmp     A20_off         ; if equivalent, the A20 line is cleared.
+    jne     .A20_on         ; if not equivalent, A20 line is set.
+    jmp     .A20_off        ; if equivalent, the A20 line is cleared.
     .A20_on:
         mov     eax, 1
         ret
     .A20_off:
-        move    eax, 0
+        mov     eax, 0
         ret
 
 ; Try to enable the A20 line by using the keyboard controller
@@ -77,12 +77,12 @@ enable_A20_keyboard_controller:
     .a20wait:                   ; wait until input buffer is clear
             in      al,0x64
             test    al,2
-            jnz     a20wait
+            jnz     .a20wait
             ret
     .a20wait2:                  ; wait until response byte has arrived
             in      al,0x64
             test    al,1
-            jz      a20wait2
+            jz      .a20wait2
             ret
 
 ; Try to enable the A20 Line using the Fast A20 Gate method
@@ -109,23 +109,23 @@ global  enable_A20_bios
 enable_A20_bios:
     mov     ax, 0x2403      ; Query A20 gate support
     int     0x15
-    jc      a20_nis         ; INT 0x15 is not supported
+    jc      .a20_nis        ; INT 0x15 is not supported
     test    ah, ah
-    jnz     a20_nis         ; INT 0x15 is not supported
+    jnz     .a20_nis        ; INT 0x15 is not supported
 
     mov     ax, 0x2402      ; Get A20 gate status
     int     0x15
-    jc      a20_ngs         ; Couldn't get status
+    jc      .a20_ngs        ; Couldn't get status
     test    ah, ah
-    jnz     a20_ngs         ; Couldn't get status
+    jnz     .a20_ngs        ; Couldn't get status
     test    al, al
-    jnz     a20_activated   ; AL = 1, A20 gate is already activated
+    jnz     .a20_activated  ; AL = 1, A20 gate is already activated
 
     mov     ax, 0x2401      ; Activate A20 gate
     int     0x15
-    jc      a20_failed      ; Couldn't activate the gate
+    jc      .a20_na         ; Couldn't activate the gate
     test    ah, ah
-    jnz     a20_failed      ; Couldn't activate the gate
+    jnz     .a20_na         ; Couldn't activate the gate
 
     .a20_nis:   ; INT 0x15 is not supported by BIOS (no interrupt support)
         mov     eax, 0
@@ -136,6 +136,6 @@ enable_A20_bios:
     .a20_na:    ; the A20 gate could not be actived (no activation)
         mov     eax, -2
         ret
-    a20_activated:
+    .a20_activated:
         mov     eax, 1
         ret
