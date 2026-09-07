@@ -124,6 +124,61 @@ enable_A20_fast_gate:
 
     .ret:ret
 
+; Function for trying all the methods for enabling the A20 line
+; Returns eax = 1 if the A20 line is set; 0 otherwise;
+global  enable_A20
+enable_A20:
+    ; preserve registers
+    push ebx
+
+    ; EBX will store the address to jmp to after 'check_A20' is finished
+
+    ; first check if the A20 line is already enabled
+    mov     ebx, try_bios   ; fill the "return-label"
+    jmp     .check_A20
+    
+    .try_bios:
+    ; Try to enable the A20 line using the BIOS interrupt function
+    call    enable_A20_bios
+    test    eax, eax 
+    jz      .try_key_cont   ; only jump to the next method if the bios method failed explicitly;
+    mov     ebx, try_key_cont
+    call    .check_A20      ; else we recheck with 'is_A20_on'
+
+    .try_key_cont:
+    ; Try the keyboard controller method
+    call    enable_A20_keyboard_controller
+    call    is_A20_on_slow
+    test    eax, eax
+    jnz     .successful
+
+    .try_fast:
+    call    enable_A20_fast_gate
+    call    is_A20_on_slow
+    test    eax, eax
+    jnz     .successful
+    ; else fall through to failed
+
+    .failed:
+        mov     eax, 0
+        jmp     .return
+    .successful:
+        mov     eax, 1
+        ; fall through
+    .return:
+        pop     ebx         ; restore ebx
+        ret
+
+    ; logic for checking if the A20 line is enabled
+    ; if its not, jmp back to the address defined in ebx
+    ; otherwise, jmp to '.successful'
+    .check_A20:
+        call    is_A20_on
+        test    eax, eax 
+        jnz     .successful ; if the A20 Line is enabled, return
+        jmp     ebx         ; else jmp to the location at ebx
+
+
 ; --------------------------------------------------
 bits 16
 
