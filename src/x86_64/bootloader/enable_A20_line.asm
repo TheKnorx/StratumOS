@@ -1,4 +1,5 @@
 ; File for handling the A20 line
+; ToDo: Replace eax return logic with `stc` anc `clc` for faster checking
 ;
 ; From wiki.osdev.org:
 ;
