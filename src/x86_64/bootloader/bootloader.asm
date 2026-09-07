@@ -40,6 +40,8 @@ check_multiboot:
 
     .ret: ret
 
+; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
+; void print_str(char* str);
 print_str:
     mov     esi, edi
     mov     edi, VGA_BUFFER
