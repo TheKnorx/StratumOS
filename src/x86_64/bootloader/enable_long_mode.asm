@@ -70,6 +70,7 @@ queryLongMode:
     	ret		
 
 ; Disables 32-Bit paging (this may or may not be set up already, but disable it anyways)
+; This function has no return value
 global  disablePaging32
 disablePaging32:
     mov eax, cr0            ; move control register cr0 into eax
