@@ -79,6 +79,15 @@ disablePaging:
     mov     cr0, eax        ; copy the modified cr0 from eax into cr0
     ret
 
+; Explicitly enable paging
+; This function has no return value
+global  enablePaging
+enablePaging:
+    mov     eax, cr0        ; move control register cr0 into eax
+    or      eax, CR0_PAGING ; only flip the bit specified in 'CR0_PAGING'
+    mov     cr0, eax        ; copy the modified cr0 from eax into cr0
+    ret
+
 ; Enable 64-Bit PAE (Physical Address Extension) paging, which includes:
 ; Page Map Level 4 Table (PML4T), Page Directory Pointer Table (PDPT),
 ; Page Directory Table (PDT), Page Table (PT);
