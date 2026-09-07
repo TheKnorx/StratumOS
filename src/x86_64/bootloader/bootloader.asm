@@ -17,6 +17,8 @@ start:
     push    0
     popfd
 
+    call    check_multiboot
+
     mov     edi, hello_message
     call    print_str
 
