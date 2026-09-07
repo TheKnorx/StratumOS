@@ -133,7 +133,7 @@ setupPaging64:
 
     ; restore registers
     pop     ebx
-    pop     rdi
+    pop     edi
     ret
 
 section .rodate  ; we can define those labels as constants and make them read only
