@@ -15,7 +15,8 @@
 section .text
 bits 32
 
-extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging, setupPaging64
+extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging, setupPaging64, enable_LM
+extern gdtr, gdt, gdt.code, CODE64
 
 global start
 start:
@@ -58,10 +59,11 @@ start:
     call    setupPaging64       ; set up paging for 64 bit
     call    enablePaging        ; has no return value
 
-    ; ToDo: enable long mode, transerfer control to C kernel
-    nop
+.enable_LM:
+    call    enable_LM           ; enable long mode
+    lgdt    [gdtr]              ; load that shit (load the global descriptor table)
 
-    jmp     loop
+    jmp far gdt.code:CODE64     ; jump to the 64 bit code
 
 /*  Am I booted by a Multiboot-compliant boot loader? */
 check_multiboot:

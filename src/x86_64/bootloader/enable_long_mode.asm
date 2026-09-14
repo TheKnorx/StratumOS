@@ -88,6 +88,23 @@ enablePaging:
     mov     cr0, eax        ; copy the modified cr0 from eax into cr0
     ret
 
+; Enable long mode
+; This function has no return value
+global enable_LM
+enable_LM:
+    ; First the the LM-bit:
+    mov ecx, EFER_MSR       ; Specify the EFER register to read from
+    rdmsr                   ; Read from the EFER Model-Specific-Register
+    or eax, EFER_LM_ENABLE  ; Set the LME bit in the loaded EFER
+    wrmsr                   ; write the modified values back into the register
+
+    ; Then enable paging and protected mode simultaneously
+    mov eax, cr0
+    or eax, CR0_PG_ENABLE | CR0_PM_ENABLE   ; ensuring that PM is set will allow for jumping
+                                            ; from real mode to compatibility mode directly
+    mov cr0, eax
+    ret
+
 ; Enable 64-Bit PAE (Physical Address Extension) paging, which includes:
 ; Page Map Level 4 Table (PML4T), Page Directory Pointer Table (PDPT),
 ; Page Directory Table (PDT), Page Table (PT);
@@ -143,8 +160,12 @@ EFLAGS_ID 			equ 1 << 21   	; if this bit can be flipped, the CPUID instruction 
 CPUID_EXTENSIONS 	equ 0x80000000 	; returns the maximum extended requests for cpuid
 CPUID_EXT_FEATURES 	equ 0x80000001 	; returns flags containing long mode support among other things
 CPUID_EDX_EXT_FEAT_LM equ 1 << 29   ; if this is set, the CPU supports long mode
+EFER_MSR            equ 0xC0000080  ; Extended Feature Enable Register (EFER)
+EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode
 
 ; Paging constants
+CR0_PM_ENABLE       equ 1 << 0
+CR0_PG_ENABLE       equ 1 << 31
 CR0_PAGING          equ 1 << 31     ; CR0 bit for enabling or disabling paging on protected- and long-mode
 CR4_PAE_ENABLE      equ 1 << 5      ; CR4 bit for enabling or disabling PAE
 PML4T_ADDR          equ 0x1000      ; beginning of the PML4 Table
