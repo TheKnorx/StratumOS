@@ -79,13 +79,14 @@ disablePaging:
     mov     cr0, eax        ; copy the modified cr0 from eax into cr0
     ret
 
-; Explicitly enable paging
+; Explicitly enable paging for 64 bit
 ; This function has no return value
-global  enablePaging
-enablePaging:
-    mov     eax, cr0        ; move control register cr0 into eax
-    or      eax, CR0_PAGING ; only flip the bit specified in 'CR0_PAGING'
-    mov     cr0, eax        ; copy the modified cr0 from eax into cr0
+global  enablePaging64
+enablePaging64:
+    mov eax, cr0            ; move control register cr0 into eax
+    or eax, CR0_PG_ENABLE | CR0_PM_ENABLE   ; ensuring that PM is set will allow for jumping
+                                            ; from real mode to compatibility mode directly
+    mov cr0, eax
     ret
 
 ; Enable long mode
