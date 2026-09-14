@@ -47,13 +47,13 @@ start:
     ; enable the A20 line if possible...
     call    try_enable_A20
     test    eax, eax
-    jnz     .disable_32Paging   ; successfully enabled the A20 line!
+    jnz     .setupPaging   ; successfully enabled the A20 line!
     ; Now if we did not succeed in enabling the A20 line,
     ; there is nothing left to do, so we have to give up.
     ; The only thing we can do is to inform the user about this
     mov     edi, info_no_A20
     call    print_str
-.disable_32Paging:
+.setupPaging:
     call    disablePaging       ; has no return value
 .enable_64Paging:
     call    setupPaging64       ; set up paging for 64 bit
