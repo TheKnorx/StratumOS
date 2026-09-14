@@ -93,17 +93,10 @@ enablePaging64:
 ; This function has no return value
 global enable_LM
 enable_LM:
-    ; First the the LM-bit:
     mov ecx, EFER_MSR       ; Specify the EFER register to read from
     rdmsr                   ; Read from the EFER Model-Specific-Register
     or eax, EFER_LM_ENABLE  ; Set the LME bit in the loaded EFER
     wrmsr                   ; write the modified values back into the register
-
-    ; Then enable paging and protected mode simultaneously
-    mov eax, cr0
-    or eax, CR0_PG_ENABLE | CR0_PM_ENABLE   ; ensuring that PM is set will allow for jumping
-                                            ; from real mode to compatibility mode directly
-    mov cr0, eax
     ret
 
 ; Enable 64-Bit PAE (Physical Address Extension) paging, which includes:
