@@ -32,7 +32,7 @@ build-x86_64: $(x86_64_asm_object_files)
 
 .PHONY: run
 run: build-x86_64
-	terminator -e "qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso"
+	qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso
 
 .PHONY: clean
 clean:
