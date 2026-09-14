@@ -34,6 +34,9 @@ build-x86_64: $(x86_64_asm_object_files)
 run: build-x86_64
 	qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso
 
+debug: build-x86_64
+	qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso -monitor stdio -s -S -d cpu_reset
+
 .PHONY: clean
 clean:
 	rm -R ./build/ ./dist targets/x86_64/iso/boot/kernel.bin
