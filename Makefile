@@ -10,7 +10,7 @@ x86_64_asm_object_files := $(patsubst $(x86_64_build_path)/%.s, $(x86_64_build_p
 # create the preprocessor assembly files ==> .asm -> .s
 $(x86_64_build_path)/%.s: $(x86_64_src_path)/%.asm
 	mkdir -p $(dir $@)
-	cpp -I include -x assembler-with-cpp  $< -o $@
+	cpp -x assembler-with-cpp  $< -o $@
 
 # make object files from preprocessor assembly files ==> .s -> .o
 $(x86_64_build_path)/%.o: $(x86_64_build_path)/%.s
