@@ -15,8 +15,8 @@
 section .text
 bits 32
 
-extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging, setupPaging64, enable_LM
-extern gdtr, gdt, gdt.code, CODE64
+extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging64, setupPaging64, enable_LM
+extern GDTR, GDT, GDT.CODE, CODE64
 
 global start
 start:
@@ -55,15 +55,13 @@ start:
     call    print_str
 .setupPaging:
     call    disablePaging       ; has no return value
-.enable_64Paging:
     call    setupPaging64       ; set up paging for 64 bit
-    call    enablePaging        ; has no return value
+    call    enable_LM           ; enable long mode before enabeling 64 bit paging
+    call    enablePaging64      ; has no return value
+;.setupPaging end
 
-.enable_LM:
-    call    enable_LM           ; enable long mode
-    lgdt    [gdtr]              ; load that shit (load the global descriptor table)
-
-    jmp far gdt.code:CODE64     ; jump to the 64 bit code
+    lgdt    [GDTR]              ; load that shit (load the global descriptor table)
+    jmp far GDT.CODE:CODE64     ; jump to the 64 bit code using a far jump
 
 /*  Am I booted by a Multiboot-compliant boot loader? */
 check_multiboot:
