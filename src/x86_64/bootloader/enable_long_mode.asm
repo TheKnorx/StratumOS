@@ -164,10 +164,6 @@ EFER_MSR            equ 0xC0000080  ; Extended Feature Enable Register (EFER)
 EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode
 
 ; Paging constants
-CR0_PM_ENABLE       equ 1 << 0
-CR0_PG_ENABLE       equ 1 << 31
-CR0_PAGING          equ 1 << 31     ; CR0 bit for enabling or disabling paging on protected- and long-mode
-CR4_PAE_ENABLE      equ 1 << 5      ; CR4 bit for enabling or disabling PAE
 PML4T_ADDR          equ 0x1000      ; beginning of the PML4 Table
 SIZEOF_PAGE_TABLE   equ 4096        ; size of one page table
 PML4T_ADDR          equ 0x1000      ; address of the PML4T
@@ -180,3 +176,9 @@ PT_READABLE         equ 2           ; marks the entry as r/w
 ENTRIES_PER_PT      equ 512         ; entries per page table
 SIZEOF_PT_ENTRY     equ 8           ; size of one entry in the page level
 PAGE_SIZE           equ 0x1000      ; size of one page level
+
+; CR bits
+CR0_PM_ENABLE       equ 1 << 0
+CR0_PG_ENABLE       equ 1 << 31
+CR0_PAGING          equ 1 << 31     ; CR0 bit for enabling or disabling paging on protected- and long-mode
+CR4_PAE_ENABLE      equ 1 << 5      ; CR4 bit for enabling or disabling PAE
