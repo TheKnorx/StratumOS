@@ -52,4 +52,6 @@ GDT:
     .Code.base2:    db  0x0     ; this is ignored in 64 bit
     .Code.limit1:   dw  0x0     ; this is ignored in 64 bit
     .Code.base1:    dw  0x00    ; this is ignored in 64 bit
+
+align 4  ; padding for the GDT_END pointer
 GDT_END:
