@@ -27,7 +27,12 @@ start:
     push    0
     popfd
 
+    ; Check if we where booted by a multiboot compliant
+    ; bootloader by verifying the signature in eax
     call    check_multiboot
+    cmp     eax, 0x00
+    jz      loop            ; the check encountered an error, so we halt execution
+
 
     mov     edi, hello_message
     call    print_str
@@ -63,16 +68,24 @@ start:
     lgdt    [GDTR]              ; load that shit (load the global descriptor table)
     jmp far GDT.Code:LongMode   ; jump to the 64 bit code using a far jump
 
-/*  Am I booted by a Multiboot-compliant boot loader? */
+; Am I booted by a multiboot-compliant boot loader?
+; returns eax = 1 if loaded by multiboot; 0 otherwise
 check_multiboot:
-    cmp     eax, MULTIBOOT2_BOOTLOADER_MAGIC
-    je      .ret        ; if we were bootes by multiboot, continue
+    ; Check if the signature passed to us in eax
+    ; matches the bootloaders magic number
 
-    .no_multiboot:      ; else print an error message
+    cmp     eax, MULTIBOOT2_BOOTLOADER_MAGIC
+    je      .multiboot          ; we were booted my multiboot
+    ; else, we were not - print an error message
+    .no_multiboot:
         mov     edi, err_no_multiboot
         call    print_str
+        mov     eax, 0
+        ret
+    .multiboot:
+        mov     eax, 1
+        ret
 
-    .ret: ret
 
 ; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
 ; void print_str(char* str);
