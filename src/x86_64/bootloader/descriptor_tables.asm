@@ -18,10 +18,8 @@
 ; before it jumps to long mode. Having a limit of 0
 ; will cause a General-Protection Fault
 
-; Macro for unsetting/clearing a flag by xor'ing it thogether
-%macro NOT 1
-    (%1 ^ %1)
-%endmacro
+; Macro for unsetting/clearing a flag by XOR'ing it thogether
+%define NOT(FLAG) (FLAG ^ FLAG)
 
 GDTR_odd_align:
     ; The intel manual says that the pseudeo-descriptor
@@ -56,7 +54,7 @@ GDT:
     .Data.base_lo:  dw  0x00    ; this is ignored in 64 bit
     .Data.base2:    db  0x00    ; this is ignored in 64 bit
     ; Set the bits of the Access Byte accordingly (for description see below)
-    .Data.access_b: db  PRESENT || PRIVILEGE || DATA_SEG || NOT(EXECUTABLE) || DC_DIREC || READ_WRITE || ACCESSED)
+    .Data.access_b: db  PRESENT || PRIVILEGE || DATA_SEG || NOT(EXECUTABLE) || DC_DIREC || READ_WRITE || ACCESSED
     ; Higher 3 bits are flags, lower ones are the higher limit
     ; Set the G (granularity) bit (- this is ignored in 64 bit)
     ; Set the DB (default operation size) to 32bit
