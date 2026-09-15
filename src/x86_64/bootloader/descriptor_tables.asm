@@ -79,6 +79,6 @@ READ_WRITE: equ (1<<1)      ; Set the RW (readable/writable) bit to write for da
 ACCESSED:   equ (1<<0)      ; Set the A (accessed) bit
 
 ; Flags bits:
-GRAN_4k:    equ (1<7)       ; Set the G (granularity) bit ==> the Limit is in 4 KiB blocks (page granularity)
-CLEARED_SZ: equ (0<6)       ; Clear it cause it should be clear if the LongMode bit is set (->wiki.osdev.org)
+GRAN_4k:    equ (1<<7)       ; Set the G (granularity) bit ==> the Limit is in 4 KiB blocks (page granularity)
+CLEARED_SZ: equ (0<<6)       ; Clear it cause it should be clear if the LongMode bit is set (->wiki.osdev.org)
 LONG_MODE:  equ (1<<5)      ; Set the L (long mode) flag to indicate its a descriptor for a 64 bit code segment
