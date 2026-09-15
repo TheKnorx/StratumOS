@@ -30,7 +30,7 @@ GDT:
 
     ; CODE Segment
     global .Code
-    .Code:          equ $ - gdt
+    .Code:          equ $ - GDT
     .Code.base3:    db  0x0     ; this is ignored in 64 bit
 
     ; Set the flag bits accordingly
