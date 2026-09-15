@@ -33,6 +33,11 @@ start:
     cmp     eax, 0x00
     jz      loop            ; the check encountered an error, so we halt execution
 
+    ; Check if the multiboot information structure is aligned correctly
+    call    check_mbi
+    cmp     eax, 0x00
+    jz      loop            ; the check encountered an error, so we halt execution
+
 
     mov     edi, hello_message
     call    print_str
@@ -86,6 +91,25 @@ check_multiboot:
         mov     eax, 1
         ret
 
+; Is the multiboot information structure aligned correctly?
+; returns eax = 1 if mbi is aligned; 0 otherwise
+check_mbi:
+    ; Check if the multiboot information structure pointed to by ebx
+    ; is aligned correctly. Fist 3 bits have to be cleared.
+    ; --> address needs to *not* be divisible by 8
+
+    mov     edx, ebx        ; copy ebx into edx
+    and     edx, 0x07       ; check alignment
+    jnz     .is_not_aligned ; if the AND did not result in zero, mbi is not aligned
+    ; else, mbi is aligned - fall through
+    .is_aligned:
+        mov     eax, 1
+        ret
+    .is_not_aligned:
+        mov     edi, err_mbi_misaligned
+        call    print_str
+        mov     eax, 0
+        ret
 
 ; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
 ; void print_str(char* str);
@@ -118,6 +142,8 @@ info_no_A20:
 /* Error messages: */
 err_no_multiboot:
     db      "Not loaded by mutliboot", 0x00
+err_mbi_misaligned:
+    db      "Multiboot information structure is missaligned", 0x00
 err_no_CPUID:
     db      "CPUID is not supported", 0x00
 err_no_LM:
