@@ -42,9 +42,9 @@ GDT:
     .Code.base1_lo: dw  0x00   ; this is ignored in 64 bit
     .Code.base2_mid:db  0x00   ; this is ignored in 64 bit
     ; Set the bits of the Access Byte accordingly (for description see below)
-    .Code.access_b: db  PRESENT || PRIVILEGE || CODE_SEG || EXECUTABLE || DC_CONFORM || READ_O || ACCESSED
+    .Code.access_b: db  PRESENT | PRIVILEGE | CODE_SEG | EXECUTABLE | DC_CONFORM | READ_O | ACCESSED
     ; Higher 3 bits are flags, lower ones are the higher limit (for description see below)
-    .Code.flags_lim:db  GRAN_4k || CLEARED_SZ || LONG_MODE || 0x0F ; the 4th bit is reserved
+    .Code.flags_lim:db  GRAN_4k | CLEARED_SZ | LONG_MODE | 0x0F ; the 4th bit is reserved
     .Code.base_hi:  db  0x00    ; this is ignored in 64 bit
 
     ; DATA segment
@@ -54,10 +54,10 @@ GDT:
     .Data.base_lo:  dw  0x00    ; this is ignored in 64 bit
     .Data.base2:    db  0x00    ; this is ignored in 64 bit
     ; Set the bits of the Access Byte accordingly (for description see below)
-    .Data.access_b: db  PRESENT || PRIVILEGE || DATA_SEG || NOT(EXECUTABLE) || DC_DIREC || READ_WRITE || ACCESSED
+    .Data.access_b: db  PRESENT | PRIVILEGE | DATA_SEG | NOT(EXECUTABLE) | DC_DIREC | READ_WRITE | ACCESSED
     ; Higher 3 bits are flags, lower ones are the higher limit (for description see below)
     ; The L (long mode) flag has to be 0
-    .Data.flags_lim:db  GRAN_4k || CLEARED_SZ || NOT(LONG_MODE) || 0x0F   ; the 4th bit is reserved
+    .Data.flags_lim:db  GRAN_4k | CLEARED_SZ | NOT(LONG_MODE) | 0x0F   ; the 4th bit is reserved
     .Data.base_hi:  db  0x00    ; this is ignored in 64 bit
 
 align 4  ; padding for the GDT_END pointer
