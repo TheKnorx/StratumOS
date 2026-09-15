@@ -108,7 +108,7 @@ err_no_multiboot:
 err_no_CPUID:
     db      "CPUID is not supported", 0x00
 err_no_LM:
-    db      "CPU does not support long mode"
+    db      "CPU does not support long mode", 0x00
 
 section .bss
 /*  Our stack area. */
