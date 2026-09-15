@@ -50,7 +50,9 @@ GDT:
     ; Set the A (accessed) bit
     .Code.access_b: db  (1<<7) || (0<<5) || (1<<4) || (1<<3) || (1<<2) || (1<<1) || (1<<0)
     .Code.base2:    db  0x0     ; this is ignored in 64 bit
-    .Code.limit1:   dw  0x0     ; this is ignored in 64 bit
+    .Code.limit1:   dw  0xffff  ; Is needed cause the processor does a last check
+                                ; before it jumps to long mode. Having a limit of 0
+                                ; will cause a General-Protection Fault
     .Code.base1:    dw  0x00    ; this is ignored in 64 bit
 
 align 4  ; padding for the GDT_END pointer
