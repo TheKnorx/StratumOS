@@ -5,8 +5,8 @@ bits 64
 
 section .text
 
-global CODE64
-CODE64:
+global LongMode
+LongMode:
     mov     rdi, hello_str
     call    print_str
 
