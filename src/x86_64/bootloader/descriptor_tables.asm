@@ -33,7 +33,7 @@ GDTR:
     dd              GDT                 ; 32-Bit Basisadresse
 global GDT
 GDT:
-    dq              0x00                ; zero entry
+    dq 0x0000000000000000       ; Null Descriptor
 
     ; CODE Segment
     global .Code
