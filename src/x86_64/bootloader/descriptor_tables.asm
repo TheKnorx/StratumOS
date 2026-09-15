@@ -55,11 +55,9 @@ GDT:
     .Data.base2:    db  0x00    ; this is ignored in 64 bit
     ; Set the bits of the Access Byte accordingly (for description see below)
     .Data.access_b: db  PRESENT || PRIVILEGE || DATA_SEG || NOT(EXECUTABLE) || DC_DIREC || READ_WRITE || ACCESSED
-    ; Higher 3 bits are flags, lower ones are the higher limit
-    ; Set the G (granularity) bit (- this is ignored in 64 bit)
-    ; Set the DB (default operation size) to 32bit
-    ; Set the L (long mode) flag to indicate its a descriptor for a 64 bit code segment
-    .Data.flags_lim:db  GRAN_4k || CLEARED_SZ || LONG_MODE || 0x0F   ; the 4th bit is reserved
+    ; Higher 3 bits are flags, lower ones are the higher limit (for description see below)
+    ; The L (long mode) flag has to be 0
+    .Data.flags_lim:db  GRAN_4k || CLEARED_SZ || NOT(LONG_MODE) || 0x0F   ; the 4th bit is reserved
     .Data.base_hi:  db  0x00    ; this is ignored in 64 bit
 
 align 4  ; padding for the GDT_END pointer
