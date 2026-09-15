@@ -61,4 +61,4 @@ src/cmake-build-debug
 build/
 dist/
 .idea/
-links
+git-excluded-files/
