@@ -20,10 +20,10 @@ extern GDTR, GDT, GDT.Code, LongMode
 
 global start
 start:
-    /*  Initialize the stack pointer. */
+    ; Initialize the stack pointer
     mov     esp, stack_top
 
-    /*  Reset EFLAGS. */
+    ; Reset EFLAGS
     push    0
     popfd
 
