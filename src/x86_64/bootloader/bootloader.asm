@@ -16,7 +16,7 @@ section .text
 bits 32
 
 extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging64, setupPaging64, enable_LM
-extern GDTR, GDT, GDT.CODE, CODE64
+extern GDTR, GDT, GDT.Code, CODE64
 
 global start
 start:
@@ -61,7 +61,7 @@ start:
 ;.setupPaging end
 
     lgdt    [GDTR]              ; load that shit (load the global descriptor table)
-    jmp far GDT.CODE:CODE64     ; jump to the 64 bit code using a far jump
+    jmp far GDT.Code:CODE64     ; jump to the 64 bit code using a far jump
 
 /*  Am I booted by a Multiboot-compliant boot loader? */
 check_multiboot:
