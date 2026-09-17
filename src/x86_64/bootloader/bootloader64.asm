@@ -9,7 +9,9 @@ global LongMode
 LongMode:
     mov     rdi, hello_str
     call    print_str
-    jmp $
+
+    cli
+    hlt
 
 ; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
 ; void print_str(char* str);
