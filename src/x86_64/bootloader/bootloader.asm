@@ -16,7 +16,7 @@ section .text
 bits 32
 
 extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging64, setupPaging64, enable_LM
-extern GDTR, GDT, GDT.Code, LongMode
+extern GDTR, GDT, GDT.Code, LongMode, GDT.Data
 
 global start
 start:
@@ -71,6 +71,17 @@ start:
 ;.setupPaging end
 
     lgdt    [GDTR]              ; load that shit (load the global descriptor table)
+
+    ; Set all the segment registers
+    cli
+    ; ToDo: do this before switching to long mode
+    mov ax, GDT.Data
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+    sti
     jmp far GDT.Code:LongMode   ; jump to the 64 bit code using a far jump
 
 ; Am I booted by a multiboot-compliant boot loader?
