@@ -20,8 +20,9 @@ extern GDTR, GDT, GDT.Code, LongMode, GDT.Data
 
 global start
 start:
-    ; Initialize the stack pointer
+    ; Initialize the stack pointer and the base pointer
     mov     esp, stack_top
+    mov     ebp, esp
 
     ; Reset EFLAGS
     push    0

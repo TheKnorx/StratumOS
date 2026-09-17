@@ -7,6 +7,10 @@ section .text
 
 global LongMode
 LongMode:
+    ; Reset the stack pointer and the base pointer for long mode (64 bit)
+    mov     rsp, stack_top
+    mov     rbp, rsp
+
     mov     rdi, hello_str
     call    print_str
 
