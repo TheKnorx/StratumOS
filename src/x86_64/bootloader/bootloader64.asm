@@ -4,7 +4,7 @@
 bits 64
 
 section .text
-extern stack_top
+extern stack_top, kernel_main
 
 global LongMode
 LongMode:
@@ -14,6 +14,8 @@ LongMode:
 
     mov     rdi, hello_str
     call    print_str64
+
+    call    kernel_main
 
     cli
     hlt
