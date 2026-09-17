@@ -161,7 +161,7 @@ err_no_LM:
     db      "CPU does not support long mode", 0x00
 
 section .bss
-/*  Our stack area. */
+; Our stack area.
 align 16
 stack_bottom:
     resb    STACK_SIZE
