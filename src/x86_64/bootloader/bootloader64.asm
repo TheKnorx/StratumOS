@@ -4,6 +4,7 @@
 bits 64
 
 section .text
+extern stack_top
 
 global LongMode
 LongMode:
