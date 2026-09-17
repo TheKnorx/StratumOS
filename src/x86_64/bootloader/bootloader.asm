@@ -1,6 +1,6 @@
 #include "multiboot2.h"
 
-%define STACK_SIZE      0x4000
+%define STACK_SIZE      0x100000    ; have 1 MByte as stack size
 
 %define COLOR_FORMAT    0x1f
 %define VGA_BUFFER      0xB8000
