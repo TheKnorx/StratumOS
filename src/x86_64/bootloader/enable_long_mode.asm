@@ -168,15 +168,15 @@ setupPaging64_16GiB:
     push    ebx
 
     mov     edi, PML4T_ADDR
-    mov     cr3, edi        ; cr3 lets the CPU know where the page tables are
+    mov     cr3, edi            ; cr3 lets the CPU know where the page tables are
 
     ; First, clear the tables
-    xor     eax, eax,       ; value to override the memory with
+    xor     eax, eax,           ; value to override the memory with
     ; the edi register points to the memory to override
     ; The counter has to store the amount of 32Bit values that will get written to memory
     mov     ecx, (SIZEOF_PAGE_TABLE*(1 + 1 + 16 + 8192)) / 4
-    rep     stosd           ; zero out the page table
-    mov     edi, cr3        ; reset edi back to the beginning of the page table
+    rep     stosd               ; zero out the page table
+    mov     edi, cr3            ; reset edi back to the beginning of the page table
 
     ; Next link the tables thogether
     ; EDI was previously set to PML4T_ADDR
@@ -185,28 +185,28 @@ setupPaging64_16GiB:
     mov    dword [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
-    mov     ecx, 0          ; counter for the loop
+    mov     ecx, 0              ; counter for the loop
     .fillPDPT:
         ; ToDo: This surely can be optimized by replacing the MUL with some shifts and stuff
         ; first determin the right table to edit by: table_address = base_address + counter * table_size
         mov     edi, PDPT_ADDR  ; base_addres of the PDPT
-        mov     eax, ecx    ; copy the counter into eax for MUL
-        xor     edx, edx    ; clear edx for MUL
+        mov     eax, ecx        ; copy the counter into eax for MUL
+        xor     edx, edx        ; clear edx for MUL
         mov     ebx, SIZEOF_PAGE_TABLE  ; set ebx to the size of one page table
-        mul     ebx         ; multiply edx:eax by ebx (counter * table_size) --> result in edx:eax
-        add     edi, eax    ; add the offset to the base address of the PDPT
+        mul     ebx             ; multiply edx:eax by ebx (counter * table_size) --> result in edx:eax
+        add     edi, eax        ; add the offset to the base address of the PDPT
 
         ; Add the link to the PDT table into the ecx'd entry of the PDPT
         ; To do that, add the offset of the PDT in question to the PDT base address
         mov     edx, PDT_ADDR   ; move into edx the base address of the PDT
-        add     edx, eax    ; add to that base address the offset - eax still holds that from earlyer
+        add     edx, eax        ; add to that base address the offset - eax still holds that from earlyer
         and     edx, PT_ADDR_MASK | PT_PRESENT | PT_READABLE
-        mov     dword [edi], edx    ; put it in there!
+        mov     dword [edi], edx; put it in there!
 
-        cmp     ecx, 16     ; check the bounds
+        cmp     ecx, 16         ; check the bounds
         jge     .end_fillPDPT   ; end the loop if: ecx >= 16
-        add     ecx, 0x01   ; else ecx++
-        jmp     .fillPDPT   ; and continue
+        add     ecx, 0x01       ; else ecx++
+        jmp     .fillPDPT       ; and continue
     .end_fillPDPT:
 
 
