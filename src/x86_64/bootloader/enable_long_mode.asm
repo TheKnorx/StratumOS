@@ -182,7 +182,7 @@ setupPaging64_16GiB:
     ; EDI was previously set to PML4T_ADDR
     ;
     ; 1: put the address of the PDPT into the first entry of the PML4
-    mov    qword [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov    dword [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
     mov     ecx, 0          ; counter for the loop
