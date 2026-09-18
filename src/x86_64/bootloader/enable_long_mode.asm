@@ -185,7 +185,7 @@ setupPaging64_16GiB:
     mov    dword [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
-    mov     ecx, 0              ; counter for the loop
+    xor     ecx, ecx            ; counter for the loop
     .fillPDPT:
         ; ToDo: This surely can be optimized by replacing the MUL with some shifts and stuff
         ; first determin the right table to edit by: table_address = base_address + counter * table_size
