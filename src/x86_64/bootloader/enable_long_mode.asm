@@ -151,6 +151,66 @@ setupPaging64:
     pop     edi
     ret
 
+global setupPaging64_16GiB
+setupPaging64_16GiB:
+    ; As we map 16 GiB into the virtual address space, paging will work the following:
+    ; 1 PML4 with 1 entry (pointing to 1 PDPT)
+    ; 1 PDPT with 16 entrys (each pointing to 1 PDT, representing 1 GiB each)
+    ; 16 PDTs with 16 * 512 = 8,192 entries (each pointing to 1 PT, representing 2 MiB each)
+    ; 8,192 PTs with 8,192 * 512 = 4,194,304 entries (each pointing to a 4 KiB page)
+    ;
+    ; So the overall size of the whole PML4 Table is:
+    ; (SIZEOF_PT_ENTRY * ENTRIES_PER_PT)(1 + 1 + 16 + 8,192) = (SIZEOF_PT_ENTRY * ENTRIES_PER_PT) * 8,210
+    ;                                                        = 8 * 512 * 8,210 = 33,628,160 = 33.62816 MiB
+
+    ; preserve registers
+    push    edi
+    push    ebx
+
+    mov     edi, PML4T_ADDR
+    mov     cr3, edi        ; cr3 lets the CPU know where the page tables are
+
+    ; First, clear the tables
+    xor     eax, eax,       ; value to override the memory with
+    ; the edi register points to the memory to override
+    ; The counter has to store the amount of 32Bit values that will get written to memory
+    mov     ecx, ((SIZEOF_PT_ENTRY * ENTRIES_PER_PT)*(1 + 1 + 16 + 8192)) / 4
+    rep     stosd           ; zero out the page table
+    mov     edi, cr3        ; reset edi back to the beginning of the page table
+
+    ; Next link the tables thogether
+    ; EDI was previously set to PML4T_ADDR
+    ;
+    ; 1: put the address of the PDPT into the first entry of the PML4
+    mov    qword [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+
+    ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
+    mov     ecx, 0          ; counter for the loop
+    .fillPDPT:
+        ; first determin the right table to edit by: table_address = base_address + counter * table_size
+        mov     edi, PDPT_ADDR  ; base_addres of the PDPT
+        mov     eax, ecx    ; copy the counter into eax for MUL
+        xor     edx, edx    ; clear edx for MUL
+        mov     ebx, SIZEOF_PAGE_TABLE  ; set ebx to the size of one page table
+        mul     ebx         ; multiply edx:eax by ebx (counter * table_size) --> result in edx:eax
+        add     edi, eax    ; add the offset to the base address of the PDPT
+
+        ; add the link into the ecx'd entry of the PDPT
+        mov     dword [edi], ??? & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+
+        cmp     ecx, 16     ; check the bounds
+        jge     .end_fillPDPT   ; end the loop if: ecx >= 16
+        add     ecx, 0x01   ; else ecx++
+        jmp     .fillPDPT   ; and continue
+    .end_fillPDPT:
+
+    ...
+
+
+
+
+
+
 section .rodata  ; we can define those labels as constants and make them read only
 ; CPUID/LM constants
 EFLAGS_ID 			equ 1 << 21   	; if this bit can be flipped, the CPUID instruction is available
