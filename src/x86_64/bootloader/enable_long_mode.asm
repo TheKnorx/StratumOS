@@ -195,8 +195,12 @@ setupPaging64_16GiB:
         mul     ebx         ; multiply edx:eax by ebx (counter * table_size) --> result in edx:eax
         add     edi, eax    ; add the offset to the base address of the PDPT
 
-        ; add the link into the ecx'd entry of the PDPT
-        mov     dword [edi], ??? & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+        ; Add the link to the PDT table into the ecx'd entry of the PDPT
+        ; To do that, add the offset of the PDT in question to the PDT base address
+        mov     edx, PDT_ADDR   ; move into edx the base address of the PDT
+        add     edx, eax    ; add to that base address the offset - eax still holds that from earlyer
+        and     edx, PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+        mov     dword [edi], edx    ; put it in there!
 
         cmp     ecx, 16     ; check the bounds
         jge     .end_fillPDPT   ; end the loop if: ecx >= 16
