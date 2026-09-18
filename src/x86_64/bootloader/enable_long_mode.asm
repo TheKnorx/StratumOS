@@ -223,8 +223,8 @@ EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode
 ; Paging constants
 PML4T_ADDR          equ 0x1000      ; beginning of the PML4 Table
 PDPT_ADDR           equ 0x2000      ; address of PDPT
-PDT_ADDR            equ 0x3000      ; address of PDT
-PT_ADDR             equ 0x4000      ; address of PT
+PDT_ADDR            equ 0x12000     ; address of PDT
+PT_ADDR             equ 0x2012000   ; address of PT
 PT_ADDR_MASK        equ 0xffffffffff000 ; the page table only uses certain parts of the actual address
 PT_PRESENT          equ 1           ; marks the entry as in use
 PT_READABLE         equ 2           ; marks the entry as r/w
