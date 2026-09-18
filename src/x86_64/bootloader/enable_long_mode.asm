@@ -121,9 +121,12 @@ setupPaging64:
     ; Next is to link up just the first entries of each table,
     ; since 2 megabytes doesn't use more than one PDT entry.
     ; EDI was previously set to PML4T_ADDR
+    ; 1. Put PDPT address into the 1st entry of PML4:
     mov     dword [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    ; 2. Put PDT address into the 1st entry of PDPT:
     mov     edi, PDPT_ADDR
     mov     dword [edi], PDT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    ; 3. Put PT address into the 1st entry of PDT:
     mov     edi, PDT_ADDR
     mov     dword [edi], PT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
 
@@ -133,9 +136,9 @@ setupPaging64:
     mov ecx, ENTRIES_PER_PT      ; 1 full page table addresses 2MiB
 
     .SetEntry:
-        mov     [edi], ebx
-        add     ebx, PAGE_SIZE
-        add     edi, SIZEOF_PT_ENTRY
+        mov     [edi], ebx      ; PT[i] = Physical Address + Flags
+        add     ebx, PAGE_SIZE  ; Advance physical address by 4096 bytes (0x1000)
+        add     edi, SIZEOF_PT_ENTRY    ; Advance entry pointer by 8 bytes
         loop    .SetEntry       ; Set the next entry.
 
     ; Now PAE can be enabled using the cr4 register
