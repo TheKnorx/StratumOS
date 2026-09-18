@@ -187,6 +187,7 @@ setupPaging64_16GiB:
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
     mov     ecx, 0          ; counter for the loop
     .fillPDPT:
+        ; ToDo: This surely can be optimized by replacing the MUL with some shifts and stuff
         ; first determin the right table to edit by: table_address = base_address + counter * table_size
         mov     edi, PDPT_ADDR  ; base_addres of the PDPT
         mov     eax, ecx    ; copy the counter into eax for MUL
