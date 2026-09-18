@@ -199,7 +199,7 @@ setupPaging64_16GiB:
         ; Add the link to the PDT table into the ecx'd entry of the PDPT
         ; To do that, add the offset of the PDT in question to the PDT base address
         mov     edx, PDT_ADDR   ; move into edx the base address of the PDT
-        add     edx, eax        ; add to that base address the offset - eax still holds that from earlyer
+        add     edx, eax        ; add to that base address the offset - eax still holds that from earlier
         and     edx, PT_ADDR_MASK | PT_PRESENT | PT_READABLE
         mov     dword [edi], edx; put it in there!
 
