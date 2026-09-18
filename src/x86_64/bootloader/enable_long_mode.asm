@@ -170,6 +170,7 @@ PT_ADDR_MASK        equ 0xffffffffff000 ; the page table only uses certain parts
 PT_PRESENT          equ 1           ; marks the entry as in use
 PT_READABLE         equ 2           ; marks the entry as r/w
 ENTRIES_PER_PT      equ 512         ; entries per page table
+SIZEOF_PAGE_TABLE   equ 4096        ; size of one page table
 SIZEOF_PT_ENTRY     equ 8           ; size of one entry in the page level
 PAGE_SIZE           equ 0x1000      ; size of one page level
 
