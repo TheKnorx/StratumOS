@@ -160,7 +160,6 @@ EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode
 ; Paging constants
 PML4T_ADDR          equ 0x1000      ; beginning of the PML4 Table
 SIZEOF_PAGE_TABLE   equ 4096        ; size of one page table
-PML4T_ADDR          equ 0x1000      ; address of the PML4T
 PDPT_ADDR           equ 0x2000      ; address of PDPT
 PDT_ADDR            equ 0x3000      ; address of PDT
 PT_ADDR             equ 0x4000      ; address of PT
