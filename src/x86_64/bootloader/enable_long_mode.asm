@@ -160,7 +160,7 @@ setupPaging64_16GiB:
     ; 8,192 PTs with 8,192 * 512 = 4,194,304 entries (each pointing to a 4 KiB page)
     ;
     ; So the overall size of the whole PML4 Table is:
-    ; (SIZEOF_PT_ENTRY * ENTRIES_PER_PT)(1 + 1 + 16 + 8,192) = (SIZEOF_PT_ENTRY * ENTRIES_PER_PT) * 8,210
+    ; (SIZEOF_PT_ENTRY * ENTRIES_PER_PT)(1 + 1 + 16 + 8,192) = (SIZEOF_PAGE_TABLE) * 8,210
     ;                                                        = 8 * 512 * 8,210 = 33,628,160 = 33.62816 MiB
 
     ; preserve registers
@@ -174,7 +174,7 @@ setupPaging64_16GiB:
     xor     eax, eax,       ; value to override the memory with
     ; the edi register points to the memory to override
     ; The counter has to store the amount of 32Bit values that will get written to memory
-    mov     ecx, ((SIZEOF_PT_ENTRY * ENTRIES_PER_PT)*(1 + 1 + 16 + 8192)) / 4
+    mov     ecx, (SIZEOF_PAGE_TABLE*(1 + 1 + 16 + 8192)) / 4
     rep     stosd           ; zero out the page table
     mov     edi, cr3        ; reset edi back to the beginning of the page table
 
