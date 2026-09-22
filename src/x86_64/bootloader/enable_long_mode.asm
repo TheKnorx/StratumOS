@@ -165,6 +165,7 @@ setupPaging64_16GiB:
 
     ; preserve registers
     push    edi
+    push    esi
     push    ebx
 
     mov     edi, PML4T_ADDR
