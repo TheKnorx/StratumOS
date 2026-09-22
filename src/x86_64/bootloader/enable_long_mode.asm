@@ -213,6 +213,12 @@ setupPaging64_16GiB:
 
 
 
+    ; Finally restore all the saved registers
+    pop     ebx
+    pop     esi
+    pop     edi
+    ret
+
 
 
 section .rodata  ; we can define those labels as constants and make them read only
