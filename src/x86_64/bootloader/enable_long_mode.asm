@@ -168,22 +168,22 @@ setupPaging64_16GiB:
     push    esi
     push    ebx
 
-    mov     edi, PML4T_ADDR
-    mov     cr3, edi            ; cr3 lets the CPU know where the page tables are
+    mov     esi, PML4T_ADDR
+    mov     cr3, esi            ; cr3 lets the CPU know where the page tables are
 
     ; First, clear the tables
     xor     eax, eax,           ; value to override the memory with
-    ; the edi register points to the memory to override
+    ; the esi register points to the memory to override
     ; The counter has to store the amount of 32Bit values that will get written to memory
     mov     ecx, (SIZEOF_PAGE_TABLE*(1 + 1 + 16 + 8192)) / 4
     rep     stosd               ; zero out the page table
-    mov     edi, cr3            ; reset edi back to the beginning of the page table
+    mov     esi, cr3            ; reset esi back to the beginning of the page table
 
     ; Next link the tables thogether
     ; EDI was previously set to PML4T_ADDR
     ;
     ; 1: put the address of the PDPT into the first entry of the PML4
-    mov    dword [edi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov    dword [esi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
     xor     ecx, ecx            ; counter for the loop
