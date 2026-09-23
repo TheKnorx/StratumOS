@@ -183,8 +183,10 @@ setupPaging64_16GiB:
     rep     stosd               ; zero out the page table
     mov     esi, cr3            ; reset esi back to the beginning of the page table
 
-    ; Next link the tables thogether
-    ; EDI was previously set to PML4T_ADDR
+    ; Next link the tables thogether. Since all those tables are located at the bottom
+    ; of the memory and are addressable only by using the lower 32Bit,
+    ; we can leave the upper 32Bit zeroed out for now.
+    ; ESI was previously set to PML4T_ADDR
     ;
     ; 1: put the address of the PDPT into the first entry of the PML4
     mov    dword [esi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
