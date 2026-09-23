@@ -211,6 +211,28 @@ setupPaging64_16GiB:
         jmp     .fillPDPT       ; and continue
     .end_fillPDPT:
 
+    ; 3. Put PT addresses into entrys of the PDTs.
+    ; Because all entries of the 16 PDTs are filled, we just interpret
+    ; the PDTs as a flat array of pointers to PTs.
+    ; So we do: *(PDT current_address + offset) = PT   -; streching over multiple PDTs
+    xor     ecx, ecx            ; reset counter for loop
+    mov     esi, PDT_ADDR       ; move into esi the base_address of the PDT
+    mov     edi, PT_ADDR        ; move into edi the base_address of the PT
+    lea     eax, [esi + 17*SIZEOF_PAGE_TABLE]       ; calculate the bounds for the loop - this defines out of bounds
+    .fillPDTs:
+        mov    [esi], edi       ; move the current PT into the current PDT entry
+
+        ; Calculate the address of the next PDT entry: PDT entry = PDT current_address + sizeof(entry)
+        lea     esi, [esi + SIZEOF_TABLE_ENTRY]     ; advance the base_address of the PDT by sizeof(entry)
+        ; Calculate the address of the next PT: PT_ecx = PT current_address + sizeof(entry)
+        lea     edi, [edi + SIZEOF_TABLE_ENTRY]     ; advance the base_address of the PDT by sizeof(entry)
+
+        ; Now do some bounds checks:
+        cmp     esi, eax        ; check if we would be out of bounds
+        jne     .fillPDTs       ; if we are not out of bounds yet, continue the loop
+        ; else fall through and end the loop
+    .end_fillPDTs:
+
 
 
 
