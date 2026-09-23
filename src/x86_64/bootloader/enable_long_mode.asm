@@ -193,24 +193,19 @@ setupPaging64_16GiB:
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
     xor     ecx, ecx            ; counter for the loop
+    mov     esi, PDPT_ADDR      ; base_addres of the PDPT
     .fillPDPT:
-        ; ToDo: This surely can be optimized by replacing the MUL with some shifts and stuff
-        ; first determin the right table to edit by: table_address = base_address + counter * table_size
-        mov     edi, PDPT_ADDR  ; base_addres of the PDPT
-        mov     eax, ecx        ; copy the counter into eax for MUL
-        xor     edx, edx        ; clear edx for MUL
-        mov     ebx, SIZEOF_PAGE_TABLE  ; set ebx to the size of one page table
-        mul     ebx             ; multiply edx:eax by ebx (counter * table_size) --> result in edx:eax
-        add     edi, eax        ; add the offset to the base address of the PDPT
+        ; Add the offset of the PDT in question to the PDT base address
+        ; PDT_ecx = PDT base_address + offset
+        mov     edi, PDT_ADDR   ; move into edi the base_address of the PDT
+        lea     edi, [edi + ecx*SIZEOF_PAGE_TABLE]  ; calculate: PDT_ecx = PDT base_address + offset
 
-        ; Add the link to the PDT table into the ecx'd entry of the PDPT
-        ; To do that, add the offset of the PDT in question to the PDT base address
-        mov     edx, PDT_ADDR   ; move into edx the base address of the PDT
-        add     edx, eax        ; add to that base address the offset - eax still holds that from earlier
-        and     edx, PT_ADDR_MASK | PT_PRESENT | PT_READABLE
-        mov     dword [edi], edx; put it in there!
+        ; PDPT[ecx] = with_flags(PDT_ecx)
+        and     edi, PT_ADDR_MASK | PT_PRESENT | PT_READABLE  ; set all the flags
+        mov     dword [esi + ecx*8], edi    ; and put it in there!
 
-        cmp     ecx, 16         ; check the bounds
+        ; Finally check the bounds
+        cmp     ecx, 16
         jge     .end_fillPDPT   ; end the loop if: ecx >= 16
         add     ecx, 0x01       ; else ecx++
         jmp     .fillPDPT       ; and continue
