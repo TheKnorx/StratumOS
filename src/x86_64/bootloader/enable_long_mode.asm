@@ -177,7 +177,7 @@ setupPaging64_16GiB:
 
     ; First, clear the tables
     xor     eax, eax,           ; value to override the memory with
-    ; the esi register points to the memory to override
+    mov     edi, esi            ; edi points to the memory to override
     ; The counter has to store the amount of 32Bit values that will get written to memory
     mov     ecx, (SIZEOF_PAGE_TABLE*(1 + 1 + 16 + 8192)) / 4
     rep     stosd               ; zero out the page table
