@@ -196,11 +196,11 @@ setupPaging64_16GiB:
     mov     esi, PDPT_ADDR      ; base_addres of the PDPT
     mov     edi, PDT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE ; base_address of PDT | flags
     .fillPDPT:
-        ; To calculate the next PDT, add to the pointer the size of the table
-        add     edi, SIZEOF_PAGE_TABLE  ; advance the PDT pointer to the next PDT
-
         ; PDPT[ecx] = with_flags(PDT_ecx)
         mov     dword [esi + ecx*8], edi    ; and put it in there!
+
+        ; To calculate the next PDT, add to the pointer the size of the table
+        add     edi, SIZEOF_PAGE_TABLE  ; advance the PDT pointer to the next PDT
 
         ; Finally check the bounds
         inc     ecx             ; ecx++
