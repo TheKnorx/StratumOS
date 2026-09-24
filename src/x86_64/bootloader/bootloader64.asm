@@ -12,6 +12,10 @@ LongMode:
     mov     rsp, stack_top
     mov     rbp, rsp
 
+    ; FOR DEBUGGING: test if paging was setup correctly - otherwise this should result in a #GP
+    mov     rdx, 0x140000000
+    mov     rax, [rdx]  ; access an address at 5 GiB
+
     mov     rdi, hello_str
     call    print_str64
 
