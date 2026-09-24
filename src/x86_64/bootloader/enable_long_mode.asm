@@ -176,6 +176,7 @@ setupPaging64_16GiB:
     mov     cr3, esi            ; cr3 lets the CPU know where the page tables are
 
     ; First, clear the tables
+    cld                         ; clear the direction flag
     xor     eax, eax,           ; value to override the memory with
     mov     edi, esi            ; edi points to the memory to override
     ; The counter has to store the amount of 32Bit values that will get written to memory
