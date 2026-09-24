@@ -12,7 +12,7 @@ This projects goal is to provide as many Prove-of-Concepts for hardware devices 
 Paging is implemented by using Physical Address Extension (PAE) through a Page Map Level 4 Table (PML4T), effectively
 producing an identity-mapping over addresses in the range of 0 up to 16 GiB (standard RAM size).<br>
 That leaves 5.3 GiB for the kernel, and 5.3 GiB each for two processes.
----
+
 ## Kernel functionality
 Planed is the implementation of the most used Linux syscalls, 
 
