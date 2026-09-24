@@ -238,9 +238,9 @@ setupPaging64_16GiB:
     mov     ecx, 8192 * ENTRIES_PER_PT  ; eax = amount of PT entries per PT * amount of PTs
     .fillPTs:
         ; PT[i] = physical address | flags = EDX:EAX
-        mov     dword [esi], edx    ; move edx into the upper 32 bit of the address part
-        add     esi, 0x04           ; advance the PT pointer to the lower 32 bit of the current entry
         mov     dword [esi], eax    ; move eax into the lower 32 bit of the address part
+        add     esi, 0x04           ; advance the PT pointer to the lower 32 bit of the current entry
+        mov     dword [esi], edx    ; move edx into the higher 32 bit of the address part
         add     esi, 0x04           ; advance the PT pointer to the next higher 32 bit of the next entry
 
         ; Advance the address by a page size
