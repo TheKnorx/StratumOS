@@ -161,7 +161,7 @@ setupPaging64_16GiB:
     ;
     ; So the overall size of the whole PML4 Table is:
     ; (SIZEOF_PT_ENTRY * ENTRIES_PER_PT)(1 + 1 + 16 + 8,192) = (SIZEOF_PAGE_TABLE) * 8,210
-    ;                                                        = 8 * 512 * 8,210 = 33,628,160 = 33.62816 MiB
+    ;                                                        = 8 * 512 * 8,210 = 33,628,160 = 32.07 MiB
     ;
     ; In this function, esi and edi have the following roles:
     ; Source Index (esi): Points to the table (-entry) that will be filled
