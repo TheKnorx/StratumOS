@@ -221,8 +221,8 @@ setupPaging64_16GiB:
 
         ; Calculate the address of the next PDT entry: PDT entry = PDT current_address + sizeof(entry)
         add     esi, SIZEOF_TABLE_ENTRY     ; advance the base_address of the PDT by sizeof(entry)
-        ; Calculate the address of the next PT: PT_ecx = PT current_address + sizeof(entry)
-        add     edi, SIZEOF_TABLE_ENTRY     ; advance the base_address of the PT by sizeof(entry)
+        ; Calculate the address of the next PT: PT_ecx = PT current_address + sizeof(page table)
+        add     edi, SIZEOF_PAGE_TABLE      ; advance the base_address of the PT by sizeof(page table)
 
         ; Now check the loop condition - esi has to be in bounds of the PDT address space:
         cmp     esi, PT_ADDR
