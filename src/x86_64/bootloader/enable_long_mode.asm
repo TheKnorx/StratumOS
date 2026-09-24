@@ -197,7 +197,7 @@ setupPaging64_16GiB:
     mov     edi, PDT_ADDR       ; move into edi the base_address of the PDT
     .fillPDPT:
         ; To calculate the next PDT, add to the pointer the size of the table
-        lea     edi, [edi + SIZEOF_PAGE_TABLE]  ; advance the PDT pointer to the next PDT
+        add     edi, SIZEOF_PAGE_TABLE  ; advance the PDT pointer to the next PDT
 
         ; PDPT[ecx] = with_flags(PDT_ecx)
         and     edi, PT_ADDR_MASK | PT_PRESENT | PT_READABLE  ; set all the flags
@@ -221,9 +221,9 @@ setupPaging64_16GiB:
         mov    [esi], edi       ; move the current PT into the current PDT entry
 
         ; Calculate the address of the next PDT entry: PDT entry = PDT current_address + sizeof(entry)
-        lea     esi, [esi + SIZEOF_TABLE_ENTRY]     ; advance the base_address of the PDT by sizeof(entry)
+        add     esi, SIZEOF_TABLE_ENTRY     ; advance the base_address of the PDT by sizeof(entry)
         ; Calculate the address of the next PT: PT_ecx = PT current_address + sizeof(entry)
-        lea     edi, [edi + SIZEOF_TABLE_ENTRY]     ; advance the base_address of the PT by sizeof(entry)
+        add     edi, SIZEOF_TABLE_ENTRY     ; advance the base_address of the PT by sizeof(entry)
 
         ; Now check the loop condition - esi has to be in bounds of the PDT address space:
         cmp     esi, PT_ADDR
