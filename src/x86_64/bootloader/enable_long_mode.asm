@@ -246,9 +246,6 @@ setupPaging64_16GiB:
         add     eax, PAGE_SIZE  ; add to the lower half the size of a page - sets OF and CF on overflow
         adc     edx, 0x00       ; add the carry from the previous add if there was any
 
-        ; Calculate the address of the next PT entry: PT entry = PT current_address + sizeof(entry)
-        add     edi, SIZEOF_PT_ENTRY    ; advance the base_address of the PT by sizeof(entry)
-
         dec     ecx             ; decrement the counter
         jnz     .fillPTs        ; if ecx > 0: continue the loop
         ; else fall through
