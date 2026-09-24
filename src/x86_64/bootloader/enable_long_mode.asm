@@ -232,7 +232,28 @@ setupPaging64_16GiB:
     .end_fillPDTs:
 
 
+    ; 4. Put the physical addresses of the pages into the Page Table (PT) - 4KiB each
+    ; Because this is a 64 bit page table, therefore requiring 64 bit addresses in the PT,
+    ; and because its populated while in protected (32 bit) mode, we use EDX:EAX to create 64 bit addresses
+    mov     esi, PT_ADDR        ; move into esi the base_address of the PT
+    xor     eax, eax            ; clear eax
+    xor     edx, edx            ; clear edx
+    mov     ecx, 8192 * ENTRIES_PER_PT  ; eax = amount of PT entries per PT * amount of PTs
+    .fillPTs:
+        mov     [esi], edx      ; move edx into the upper 32 bit of the address part
+        mov     [esi], eax      ; move eax into the lower 32 bit of the address part
 
+        ; Advance the address by a page size
+        add     eax, PAGE_SIZE  ; add to the lower half the size of a page - sets OF and CF on overflow
+        adc     edx, 0x00       ; add the carry from the previous add if there was any
+
+        ; Calculate the address of the next PT entry: PT entry = PT current_address + sizeof(entry)
+        add     edi, SIZEOF_PT_ENTRY    ; advance the base_address of the PT by sizeof(entry)
+
+        dec     ecx             ; decrement the counter
+        jnz     .fillPTs        ; if ecx > 0: continue the loop
+        ; else fall through
+    .end_fillPTs:
 
 
     ; Finally restore all the saved registers
