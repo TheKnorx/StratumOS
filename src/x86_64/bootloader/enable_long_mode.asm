@@ -213,7 +213,6 @@ setupPaging64_16GiB:
     ; Because all entries of the 16 PDTs are filled, we just interpret
     ; the PDTs as a flat array of pointers to PTs.
     ; So we do: *(PDT current_address + offset) = PT   -; streching over multiple PDTs
-    xor     ecx, ecx            ; reset counter for loop
     mov     esi, PDT_ADDR       ; move into esi the base_address of the PDT
     mov     edi, PT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE  ; base_address of PT | flags
     .fillPDTs:
@@ -221,7 +220,7 @@ setupPaging64_16GiB:
 
         ; Calculate the address of the next PDT entry: PDT entry = PDT current_address + sizeof(entry)
         add     esi, SIZEOF_TABLE_ENTRY     ; advance the base_address of the PDT by sizeof(entry)
-        ; Calculate the address of the next PT: PT_ecx = PT current_address + sizeof(page table)
+        ; Calculate the address of the next PT: PT[i] = PT current_address + sizeof(page table)
         add     edi, SIZEOF_PAGE_TABLE      ; advance the base_address of the PT by sizeof(page table)
 
         ; Now check the loop condition - esi has to be in bounds of the PDT address space:
