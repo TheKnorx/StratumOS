@@ -217,7 +217,7 @@ setupPaging64_16GiB:
     mov     esi, PDT_ADDR       ; move into esi the base_address of the PDT
     mov     edi, PT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE  ; base_address of PT | flags
     .fillPDTs:
-        mov    [esi], edi       ; move the current PT into the current PDT entry
+        mov    dword [esi], edi ; move the current PT into the current PDT entry
 
         ; Calculate the address of the next PDT entry: PDT entry = PDT current_address + sizeof(entry)
         add     esi, SIZEOF_TABLE_ENTRY     ; advance the base_address of the PDT by sizeof(entry)
