@@ -238,8 +238,11 @@ setupPaging64_16GiB:
     xor     edx, edx            ; clear edx
     mov     ecx, 8192 * ENTRIES_PER_PT  ; eax = amount of PT entries per PT * amount of PTs
     .fillPTs:
-        mov     [esi], edx      ; move edx into the upper 32 bit of the address part
-        mov     [esi], eax      ; move eax into the lower 32 bit of the address part
+        ; PT[i] = physical address | flags = EDX:EAX
+        mov     dword [esi], edx    ; move edx into the upper 32 bit of the address part
+        add     esi, 0x04           ; advance the PT pointer to the lower 32 bit of the current entry
+        mov     dword [esi], eax    ; move eax into the lower 32 bit of the address part
+        add     esi, 0x04           ; advance the PT pointer to the next higher 32 bit of the next entry
 
         ; Advance the address by a page size
         add     eax, PAGE_SIZE  ; add to the lower half the size of a page - sets OF and CF on overflow
