@@ -250,6 +250,11 @@ setupPaging64_16GiB:
         jnz     .fillPTs        ; if ecx > 0: continue the loop
         ; else fall through
 
+    ; Now PAE can be enabled using the cr4 register
+    mov     eax, cr4
+    or      eax, CR4_PAE_ENABLE
+    mov     cr4, eax
+
     ; Finally restore all the saved registers
     pop     ebx
     pop     esi
