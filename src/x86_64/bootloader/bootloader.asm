@@ -15,7 +15,7 @@
 section .text
 bits 32
 
-extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging64, setupPaging64, enable_LM
+extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging64, setupPaging64_16GiB, enable_LM
 extern GDTR, GDT, GDT.Code, LongMode, GDT.Data
 
 global start
@@ -66,7 +66,7 @@ start:
     call    print_str
 .setupPaging:
     call    disablePaging       ; has no return value
-    call    setupPaging64       ; set up paging for 64 bit
+    call    setupPaging64_16GiB ; set up paging for 64 bit
     call    enable_LM           ; enable long mode before enabeling 64 bit paging
     call    enablePaging64      ; has no return value
 ;.setupPaging end
