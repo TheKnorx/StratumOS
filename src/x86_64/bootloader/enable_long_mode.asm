@@ -229,8 +229,6 @@ setupPaging64_16GiB:
         cmp     esi, PT_ADDR
         jb      .fillPDTs       ; if esi < PT_ADDR: continue the loop
         ; else fall through and end the loop
-    .end_fillPDTs:
-
 
     ; 4. Put the physical addresses of the pages into the Page Table (PT) - 4KiB each
     ; Because this is a 64 bit page table, therefore requiring 64 bit addresses in the PT,
@@ -253,8 +251,6 @@ setupPaging64_16GiB:
         dec     ecx             ; decrement the counter
         jnz     .fillPTs        ; if ecx > 0: continue the loop
         ; else fall through
-    .end_fillPTs:
-
 
     ; Finally restore all the saved registers
     pop     ebx
