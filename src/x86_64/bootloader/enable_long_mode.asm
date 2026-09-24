@@ -203,10 +203,10 @@ setupPaging64_16GiB:
         mov     dword [esi + ecx*8], edi    ; and put it in there!
 
         ; Finally check the bounds
+        inc     ecx             ; ecx++
         cmp     ecx, 16
-        jge     .end_fillPDPT   ; end the loop if: ecx >= 16
-        add     ecx, 0x01       ; else ecx++
-        jmp     .fillPDPT       ; and continue
+        jb      .fillPDPT       ; if ecx < 16: continue the loop
+        ; else fall through
     .end_fillPDPT:
 
     ; 3. Put PT addresses into entrys of the PDTs.
