@@ -225,8 +225,8 @@ setupPaging64_16GiB:
         ; Calculate the address of the next PT: PT_ecx = PT current_address + sizeof(entry)
         lea     edi, [edi + SIZEOF_TABLE_ENTRY]     ; advance the base_address of the PDT by sizeof(entry)
 
-        ; Now do some bounds checks:
-        cmp     esi, PT_ADDR    ; check if we would be out of bounds
+        ; Now check the loop condition - esi has to be in bounds of the PDT address space:
+        cmp     esi, PT_ADDR
         jb      .fillPDTs       ; if esi < PT_ADDR: continue the loop
         ; else fall through and end the loop
     .end_fillPDTs:
