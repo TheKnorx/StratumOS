@@ -234,7 +234,7 @@ setupPaging64_16GiB:
     ; Because this is a 64 bit page table, therefore requiring 64 bit addresses in the PT,
     ; and because its populated while in protected (32 bit) mode, we use EDX:EAX to create 64 bit addresses
     mov     esi, PT_ADDR        ; move into esi the base_address of the PT
-    xor     eax, eax            ; clear eax
+    mov     eax, PT_PRESENT | PT_READABLE   ; move the flags into eax
     xor     edx, edx            ; clear edx
     mov     ecx, 8192 * ENTRIES_PER_PT  ; eax = amount of PT entries per PT * amount of PTs
     .fillPTs:
