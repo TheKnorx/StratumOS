@@ -217,7 +217,6 @@ setupPaging64_16GiB:
     xor     ecx, ecx            ; reset counter for loop
     mov     esi, PDT_ADDR       ; move into esi the base_address of the PDT
     mov     edi, PT_ADDR        ; move into edi the base_address of the PT
-    lea     eax, [esi + 17*SIZEOF_PAGE_TABLE]       ; calculate the bounds for the loop - this defines out of bounds
     .fillPDTs:
         mov    [esi], edi       ; move the current PT into the current PDT entry
 
@@ -227,8 +226,8 @@ setupPaging64_16GiB:
         lea     edi, [edi + SIZEOF_TABLE_ENTRY]     ; advance the base_address of the PDT by sizeof(entry)
 
         ; Now do some bounds checks:
-        cmp     esi, eax        ; check if we would be out of bounds
-        jne     .fillPDTs       ; if we are not out of bounds yet, continue the loop
+        cmp     esi, PT_ADDR    ; check if we would be out of bounds
+        jb      .fillPDTs       ; if esi < PT_ADDR: continue the loop
         ; else fall through and end the loop
     .end_fillPDTs:
 
