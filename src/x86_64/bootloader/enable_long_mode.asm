@@ -207,7 +207,6 @@ setupPaging64_16GiB:
         cmp     ecx, 16
         jb      .fillPDPT       ; if ecx < 16: continue the loop
         ; else fall through
-    .end_fillPDPT:
 
     ; 3. Put PT addresses into entrys of the PDTs.
     ; Because all entries of the 16 PDTs are filled, we just interpret
