@@ -194,13 +194,12 @@ setupPaging64_16GiB:
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
     xor     ecx, ecx            ; counter for the loop
     mov     esi, PDPT_ADDR      ; base_addres of the PDPT
-    mov     edi, PDT_ADDR       ; move into edi the base_address of the PDT
+    mov     edi, PDT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE ; base_address of PDT | flags
     .fillPDPT:
         ; To calculate the next PDT, add to the pointer the size of the table
         add     edi, SIZEOF_PAGE_TABLE  ; advance the PDT pointer to the next PDT
 
         ; PDPT[ecx] = with_flags(PDT_ecx)
-        and     edi, PT_ADDR_MASK | PT_PRESENT | PT_READABLE  ; set all the flags
         mov     dword [esi + ecx*8], edi    ; and put it in there!
 
         ; Finally check the bounds
@@ -216,7 +215,7 @@ setupPaging64_16GiB:
     ; So we do: *(PDT current_address + offset) = PT   -; streching over multiple PDTs
     xor     ecx, ecx            ; reset counter for loop
     mov     esi, PDT_ADDR       ; move into esi the base_address of the PDT
-    mov     edi, PT_ADDR        ; move into edi the base_address of the PT
+    mov     edi, PT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE  ; base_address of PT | flags
     .fillPDTs:
         mov    [esi], edi       ; move the current PT into the current PDT entry
 
