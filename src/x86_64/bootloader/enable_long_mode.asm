@@ -87,6 +87,10 @@ enablePaging64:
     or eax, CR0_PG_ENABLE | CR0_PM_ENABLE   ; ensuring that PM is set will allow for jumping
                                             ; from real mode to compatibility mode directly
     mov cr0, eax
+    mov     eax, cr0            ; move control register cr0 into eax
+    or      eax, CR0_PG_ENABLE | CR0_PM_ENABLE  ; ensuring that PM is set will allow for jumping
+                                                ; from real mode to compatibility mode directly
+    mov     cr0, eax            ; update cr0 with the modified value
     ret
 
 ; Enable long mode
