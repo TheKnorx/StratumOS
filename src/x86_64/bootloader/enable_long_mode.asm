@@ -195,7 +195,7 @@ setupPaging64_16GiB:
     ; 1: put the address of the PDPT into the first entry of the PML4
     mov     eax, PDPT_ADDR      ; base_address of the PDPT
     and     eax, PT_ADDR_MASK   ; Clear the flag bits
-    or      eax, PT_PRESENT | PT_READABLE    ; add the flags to it
+    or      eax, PT_PRESENT | PT_WRITABLE    ; add the flags to it
     mov     dword [esi], eax    ; *esi = base_address of PDT | flags
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
@@ -203,7 +203,7 @@ setupPaging64_16GiB:
     mov     esi, PDPT_ADDR      ; base_addres of the PDPT
     mov     eax, PDT_ADDR       ; base_address of the PDT
     and     eax, PT_ADDR_MASK   ; Clear the flag bits
-    or     eax, PT_PRESENT | PT_READABLE    ; add the flags to it
+    or      eax, PT_PRESENT | PT_WRITABLE    ; add the flags to it
     mov     edi, eax ; base_address of PDT | flags
     .fillPDPT:
         ; PDPT[ecx] = with_flags(PDT_ecx)
@@ -225,7 +225,7 @@ setupPaging64_16GiB:
     mov     esi, PDT_ADDR       ; move into esi the base_address of the PDT
     mov     eax, PT_ADDR        ; base_address of the PT
     and     eax, PT_ADDR_MASK   ; Clear the flag bits
-    or      eax, PT_PRESENT | PT_READABLE    ; add the flags to it
+    or      eax, PT_PRESENT | PT_WRITABLE    ; add the flags to it
     mov     edi, eax            ; base_address of PT | flags
     .fillPDTs:
         mov    dword [esi], edi ; move the current PT into the current PDT entry
@@ -244,7 +244,7 @@ setupPaging64_16GiB:
     ; Because this is a 64 bit page table, therefore requiring 64 bit addresses in the PT,
     ; and because its populated while in protected (32 bit) mode, we use EDX:EAX to create 64 bit addresses
     mov     esi, PT_ADDR        ; move into esi the base_address of the PT
-    mov     eax, PT_PRESENT | PT_READABLE   ; move the flags into eax
+    mov     eax, PT_PRESENT | PT_WRITABLE   ; move the flags into eax
     xor     edx, edx            ; clear edx
     mov     ecx, 8192 * ENTRIES_PER_PT  ; eax = amount of PT entries per PT * amount of PTs
     .fillPTs:
@@ -291,7 +291,7 @@ EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode (EFER.
 ;PT_ADDR             equ 0x13000     ; address of PT     = 0x3000 + 4096 * 16
 PT_ADDR_MASK        equ 0xffffffffff000 ; the page table only uses certain parts of the actual address
 PT_PRESENT          equ 1           ; marks the entry as in use
-PT_READABLE         equ 2           ; marks the entry as r/w
+PT_WRITABLE         equ 0x02        ; marks the entry as writable
 ENTRIES_PER_PT      equ 512         ; entries per page table
 SIZEOF_PAGE_TABLE   equ 4096        ; size of one page table
 SIZEOF_TABLE_ENTRY  equ 8           ; generel size for all entries in every table
