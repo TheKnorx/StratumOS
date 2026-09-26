@@ -171,6 +171,7 @@ setupPaging64_16GiB:
     ; In this function, esi and edi have the following roles:
     ; Source Index (esi): Points to the table (-entry) that will be filled
     ; Destination Index (edi): Points to the table that is filled into esi
+    ; [base + index*scale + displacement]
 
     ; preserve registers
     push    edi
