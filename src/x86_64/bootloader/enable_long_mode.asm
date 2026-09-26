@@ -83,10 +83,9 @@ disablePaging:
 ; This function has no return value
 global  enablePaging64
 enablePaging64:
-    mov eax, cr0            ; move control register cr0 into eax
-    or eax, CR0_PG_ENABLE | CR0_PM_ENABLE   ; ensuring that PM is set will allow for jumping
-                                            ; from real mode to compatibility mode directly
-    mov cr0, eax
+    mov     esi, PML4T_ADDR     ; move into esi the address of the PML4T
+    mov     cr3, esi            ; cr3 lets the CPU know where the page tables are
+
     mov     eax, cr0            ; move control register cr0 into eax
     or      eax, CR0_PG_ENABLE | CR0_PM_ENABLE  ; ensuring that PM is set will allow for jumping
                                                 ; from real mode to compatibility mode directly
@@ -177,9 +176,6 @@ setupPaging64_16GiB:
     push    edi
     push    esi
     push    ebx
-
-    mov     esi, PML4T_ADDR
-    mov     cr3, esi            ; cr3 lets the CPU know where the page tables are
 
     ; First, clear the tables
     cld                         ; clear the direction flag
