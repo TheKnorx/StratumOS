@@ -197,7 +197,7 @@ setupPaging64_16GiB:
     mov     eax, PDPT_ADDR      ; base_address of the PDPT
     and     eax, PT_ADDR_MASK   ; Clear the flag bits
     or      eax, PT_PRESENT | PT_WRITABLE    ; add the flags to it
-    mov     dword [esi], eax    ; *esi = base_address of PDT | flags
+    mov     [esi], eax    ; *esi = base_address of PDT | flags
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
     xor     ecx, ecx            ; counter for the loop
@@ -208,7 +208,7 @@ setupPaging64_16GiB:
     mov     edi, eax ; base_address of PDT | flags
     .fillPDPT:
         ; PDPT[ecx] = with_flags(PDT_ecx)
-        mov     dword [esi + ecx*8], edi    ; and put it in there!
+        mov     [esi + ecx*8], edi    ; and put it in there!
 
         ; To calculate the next PDT, add to the pointer the size of the table
         add     edi, SIZEOF_PAGE_TABLE  ; advance the PDT pointer to the next PDT
@@ -229,7 +229,7 @@ setupPaging64_16GiB:
     or      eax, PT_PRESENT | PT_WRITABLE    ; add the flags to it
     mov     edi, eax            ; base_address of PT | flags
     .fillPDTs:
-        mov    dword [esi], edi ; move the current PT into the current PDT entry
+        mov    [esi], edi ; move the current PT into the current PDT entry
 
         ; Calculate the address of the next PDT entry: PDT entry = PDT current_address + sizeof(entry)
         add     esi, SIZEOF_TABLE_ENTRY     ; advance the base_address of the PDT by sizeof(entry)
