@@ -281,7 +281,7 @@ CPUID_EXTENSIONS 	equ 0x80000000 	; returns the maximum extended requests for cp
 CPUID_EXT_FEATURES 	equ 0x80000001 	; returns flags containing long mode support among other things
 CPUID_EDX_EXT_FEAT_LM equ 1 << 29   ; if this is set, the CPU supports long mode
 EFER_MSR            equ 0xC0000080  ; Extended Feature Enable Register (EFER)
-EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode
+EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode (EFER.LME)
 
 ; Paging constants
 ;PML4T_ADDR          equ 0x1000      ; beginning of the PML4 Table
