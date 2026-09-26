@@ -190,12 +190,16 @@ setupPaging64_16GiB:
     ; ESI was previously set to PML4T_ADDR
     ;
     ; 1: put the address of the PDPT into the first entry of the PML4
-    mov    dword [esi], PDPT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov     eax, PDPT_ADDR      ; base_address of the PDPT
+    and     eax, PT_ADDR_MASK | PT_PRESENT | PT_READABLE    ; add the flags to it
+    mov     dword [esi], eax    ; *esi = base_address of PDT | flags
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
     xor     ecx, ecx            ; counter for the loop
     mov     esi, PDPT_ADDR      ; base_addres of the PDPT
-    mov     edi, PDT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE ; base_address of PDT | flags
+    mov     eax, PDT_ADDR       ; base_address of the PDT
+    and     eax, PT_ADDR_MASK | PT_PRESENT | PT_READABLE    ; add the flags to it
+    mov     edi, eax ; base_address of PDT | flags
     .fillPDPT:
         ; PDPT[ecx] = with_flags(PDT_ecx)
         mov     dword [esi + ecx*8], edi    ; and put it in there!
@@ -214,7 +218,9 @@ setupPaging64_16GiB:
     ; the PDTs as a flat array of pointers to PTs.
     ; So we do: *(PDT current_address + offset) = PT   -; streching over multiple PDTs
     mov     esi, PDT_ADDR       ; move into esi the base_address of the PDT
-    mov     edi, PT_ADDR & PT_ADDR_MASK | PT_PRESENT | PT_READABLE  ; base_address of PT | flags
+    mov     eax, PT_ADDR        ; base_address of the PT
+    and     eax, PT_ADDR_MASK | PT_PRESENT | PT_READABLE    ; add the flags to it
+    mov     edi, eax            ; base_address of PT | flags
     .fillPDTs:
         mov    dword [esi], edi ; move the current PT into the current PDT entry
 
@@ -273,10 +279,10 @@ EFER_MSR            equ 0xC0000080  ; Extended Feature Enable Register (EFER)
 EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode
 
 ; Paging constants
-PML4T_ADDR          equ 0x1000      ; beginning of the PML4 Table
-PDPT_ADDR           equ 0x2000      ; address of PDPT   = 0x1000 + 4096 * 1
-PDT_ADDR            equ 0x3000      ; address of PDT    = 0x2000 + 4096 * 1
-PT_ADDR             equ 0x13000     ; address of PT     = 0x3000 + 4096 * 16
+;PML4T_ADDR          equ 0x1000      ; beginning of the PML4 Table
+;PDPT_ADDR           equ 0x2000      ; address of PDPT   = 0x1000 + 4096 * 1
+;PDT_ADDR            equ 0x3000      ; address of PDT    = 0x2000 + 4096 * 1
+;PT_ADDR             equ 0x13000     ; address of PT     = 0x3000 + 4096 * 16
 PT_ADDR_MASK        equ 0xffffffffff000 ; the page table only uses certain parts of the actual address
 PT_PRESENT          equ 1           ; marks the entry as in use
 PT_READABLE         equ 2           ; marks the entry as r/w
@@ -291,3 +297,13 @@ CR0_PM_ENABLE       equ 1 << 0
 CR0_PG_ENABLE       equ 1 << 31
 CR0_PAGING          equ 1 << 31     ; CR0 bit for enabling or disabling paging on protected- and long-mode
 CR4_PAE_ENABLE      equ 1 << 5      ; CR4 bit for enabling or disabling PAE
+
+section .bss
+; For now we simply reservate the space that is needed by the PML4T.
+; All of those tables need to be page aligned
+; This will be changed in the future!
+align PAGE_SIZE
+PML4T_ADDR:         resb SIZEOF_PAGE_TABLE * 1      ; 1 PML4T
+PDPT_ADDR:          resb SIZEOF_PAGE_TABLE * 1      ; 1 PDPT
+PDT_ADDR:           resb SIZEOF_PAGE_TABLE * 16     ; 16 PDTs
+PT_ADDR:            resb SIZEOF_PAGE_TABLE * 8192   ; 8192 PTs
