@@ -42,8 +42,14 @@ build-x86_64: $(x86_64_asm_object_files) $(x86_64_c_object_files)
 run: build-x86_64
 	qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso
 
-debug: build-x86_64
+start_qemu_debug:
 	qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso -monitor stdio -s -S -d cpu_reset
+
+start_gdb_debug:
+	terminator -e "pwndbg -ex \"target remote 127.0.0.1:1234\""
+
+debug: build-x86_64
+	make -j 2 start_qemu_debug start_gdb_debug
 
 .PHONY: clean
 clean:
