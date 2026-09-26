@@ -31,6 +31,8 @@ global GDTR
 GDTR:
     dw              GDT_END - GDT - 1   ; 16-Bit Limit
     dd              GDT                 ; 32-Bit Basisadresse
+
+align 8                         ;
 global GDT
 GDT:
     dq 0x0000000000000000       ; Null Descriptor
