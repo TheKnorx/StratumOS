@@ -193,14 +193,16 @@ setupPaging64_16GiB:
     ;
     ; 1: put the address of the PDPT into the first entry of the PML4
     mov     eax, PDPT_ADDR      ; base_address of the PDPT
-    and     eax, PT_ADDR_MASK | PT_PRESENT | PT_READABLE    ; add the flags to it
+    and     eax, PT_ADDR_MASK   ; Clear the flag bits
+    or      eax, PT_PRESENT | PT_READABLE    ; add the flags to it
     mov     dword [esi], eax    ; *esi = base_address of PDT | flags
 
     ; 2: put the addresses of the 16 PDTs into the first 16 entries of the PDPT
     xor     ecx, ecx            ; counter for the loop
     mov     esi, PDPT_ADDR      ; base_addres of the PDPT
     mov     eax, PDT_ADDR       ; base_address of the PDT
-    and     eax, PT_ADDR_MASK | PT_PRESENT | PT_READABLE    ; add the flags to it
+    and     eax, PT_ADDR_MASK   ; Clear the flag bits
+    or     eax, PT_PRESENT | PT_READABLE    ; add the flags to it
     mov     edi, eax ; base_address of PDT | flags
     .fillPDPT:
         ; PDPT[ecx] = with_flags(PDT_ecx)
@@ -221,7 +223,8 @@ setupPaging64_16GiB:
     ; So we do: *(PDT current_address + offset) = PT   -; streching over multiple PDTs
     mov     esi, PDT_ADDR       ; move into esi the base_address of the PDT
     mov     eax, PT_ADDR        ; base_address of the PT
-    and     eax, PT_ADDR_MASK | PT_PRESENT | PT_READABLE    ; add the flags to it
+    and     eax, PT_ADDR_MASK   ; Clear the flag bits
+    or      eax, PT_PRESENT | PT_READABLE    ; add the flags to it
     mov     edi, eax            ; base_address of PT | flags
     .fillPDTs:
         mov    dword [esi], edi ; move the current PT into the current PDT entry
