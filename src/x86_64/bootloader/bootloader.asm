@@ -76,12 +76,12 @@ start:
     ; Set all the segment registers
     cli
     ; ToDo: do this before switching to long mode
-    mov ax, GDT.Data
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
+    mov     ax, GDT.Data
+    mov     ds, ax
+    mov     es, ax
+    mov     fs, ax
+    mov     gs, ax
+    mov     ss, ax
     sti
 
     jmp far GDT.Code:LongMode   ; jump to the 64 bit code using a far jump
