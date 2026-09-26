@@ -102,6 +102,7 @@ enable_LM:
 ; Enable 64-Bit PAE (Physical Address Extension) paging, which includes:
 ; Page Map Level 4 Table (PML4T), Page Directory Pointer Table (PDPT),
 ; Page Directory Table (PDT), Page Table (PT);
+%if 0  ; comment this function out nasm style
 global  setupPaging64
 setupPaging64:
     ; preserve registers
@@ -150,6 +151,7 @@ setupPaging64:
     pop     ebx
     pop     edi
     ret
+%endif
 
 global setupPaging64_16GiB
 setupPaging64_16GiB:
