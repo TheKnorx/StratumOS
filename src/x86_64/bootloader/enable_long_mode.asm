@@ -180,11 +180,12 @@ setupPaging64_16GiB:
     ; First, clear the tables
     cld                         ; clear the direction flag
     xor     eax, eax,           ; value to override the memory with
-    mov     edi, esi            ; edi points to the memory to override
+    mov     edi, PML4T_ADDR     ; edi points to the memory to override
     ; The counter has to store the amount of 32Bit values that will get written to memory
     mov     ecx, (SIZEOF_PAGE_TABLE*(1 + 1 + 16 + 8192)) / 4
     rep     stosd               ; zero out the page table
-    mov     esi, cr3            ; reset esi back to the beginning of the page table
+
+    mov     esi, PML4T_ADDR     ; move into esi the address of the PML4T
 
     ; Next link the tables thogether. Since all those tables are located at the bottom
     ; of the memory and are addressable only by using the lower 32Bit,
