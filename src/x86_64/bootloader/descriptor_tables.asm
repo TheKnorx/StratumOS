@@ -62,7 +62,6 @@ GDT:
     .Data.flags_lim:db  GRAN_4k | CLEARED_SZ | NOT(LONG_MODE) | 0x0F   ; the 4th bit is reserved
     .Data.base_hi:  db  0x00    ; this is ignored in 64 bit
 
-align 4  ; padding for the GDT_END pointer
 GDT_END:
 
 section .rodata
