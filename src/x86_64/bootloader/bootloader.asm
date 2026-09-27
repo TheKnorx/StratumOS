@@ -16,7 +16,7 @@ section .text
 bits 32
 
 extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging64, setupPaging64_16GiB, enable_LM
-extern GDTR, GDT, GDT.Code, LongMode, GDT.Data
+extern GDTR, GDT, GDT.Code, LongMode, GDT.Data, IDTR
 
 global start
 start:
@@ -72,6 +72,7 @@ start:
 ;.setupPaging end
 
     lgdt    [GDTR]              ; load that shit (load the global descriptor table)
+    lidt    [IDTR]              ; load the interrupt descriptor table register
 
     ; Set all the segment registers
     cli
