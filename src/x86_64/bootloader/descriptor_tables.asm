@@ -30,7 +30,7 @@ GDTR_odd_align:
 global GDTR
 GDTR:
     dw              GDT_END - GDT - 1   ; 16-Bit Limit
-    dd              GDT                 ; 32-Bit Basisadresse
+    dd              GDT                 ; 32-Bit Baseaddress
 
 align 8                         ;
 global GDT
