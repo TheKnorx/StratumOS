@@ -23,7 +23,8 @@ $(x86_64_build_path)/%.o: $(x86_64_build_path)/%.s
 # make object files from C files ==> .c -> .o
 $(x86_64_build_path)/%.o: $(x86_64_src_path)/%.c
 	mkdir -p $(dir $@)
-	gcc -ffreestanding -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -c $< -o $@
+	gcc -ffreestanding -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -c $< -o $@ \
+	-Wall -Wextra -Werror -pedantic
 
 # throw everything together and we have a kernel
 .PHONY: build-x86_64
