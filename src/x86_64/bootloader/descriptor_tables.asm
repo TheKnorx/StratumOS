@@ -99,6 +99,7 @@ GDT_END:
     IDT.%{%IG_off2}:    dw  %3  ; second offset
 %endmacro
 
+global IDTR
 IDTR:
     dw  IDT_END - IDT-1      ; 16-Bit Limit
     dd  IDT                  ; 32-Bit Basisadresse
