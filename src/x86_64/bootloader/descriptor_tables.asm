@@ -64,6 +64,52 @@ GDT:
 
 GDT_END:
 
+
+; Interrupt Descriptor Table for 64 bit
+;
+; Intel Manual 3;   Because there are only 256 interrupt or exception vectors, the IDT need not
+;                   contain more than 256 descriptors. It can contain fewer than 256 descriptors [...].
+;
+; Interrupt gates automatically clear the IF flag upon entry, disabling further
+; maskable hardware interrupts until the handler returns via an IRET instruction.
+; This prevents nested interrupts and stack overflow, making them the standard
+; choice for hardware interrupt handling (e.g., keyboard or network interrupts)
+;
+; Trap gates do not clear the IF flag, allowing new interrupts to occur during the
+; handler's execution. This makes them ideal for system calls, software interrupts,
+; and exceptions (e.g., page faults or division by zero), where minimizing interrupt
+; latency and maintaining system responsiveness is critical.
+
+; Macro for building either an interrupt or a trap interrupt descriptors
+; Parameters in the following order:
+; 1) Descriptor to generate - trap or interrupt gate
+; 2) first offset       4) segment selector
+; 3) second offset      5) flags: P(16), DPL(13), D(11)
+%macro BUILD_IDT_DESCRIPTOR 5
+    IDT.%{%IG_off1}:    dw  %2  ; first offset
+    IDT.%{%IG_ss}:      dw  %4  ; segment selector
+
+    %if %1 == M_CREAT_IG
+        IDT.%{%IF_flags}:   dw  IG_FLAG_ID | %5  ; combine the IG identifier with the IG flags
+    %elseif %1 == M_CREAT_TG
+        IDT.%{%IF_flags}:   dw  TG_FLAG_ID | %5  ; combine the TG identifier with the TG flags
+    %else %error "IDT descriptor builder: Received invalid descriptor type"
+    %endif
+
+    IDT.%{%IG_off2}:    dw  %3  ; second offset
+%endmacro
+
+IDTR:
+    dw  IDT_END - IDT-1      ; 16-Bit Limit
+    dd  IDT                  ; 32-Bit Basisadresse
+
+align 8                         ; align the GDT on a 8 byte boundary
+IDT:
+
+IDT_END:
+
+
+
 section .rodata
 ; Access bits:
 PRESENT:    equ (1<<7)      ; Set the P flag to indicate its present
@@ -81,3 +127,11 @@ ACCESSED:   equ (1<<0)      ; Set the A (accessed) bit
 GRAN_4k:    equ (1<<7)      ; Set the G (granularity) bit ==> the Limit is in 4 KiB blocks (page granularity)
 CLEARED_SZ: equ (0<<6)      ; Clear it cause it should be clear if the LongMode bit is set (->wiki.osdev.org)
 LONG_MODE:  equ (1<<5)      ; Set the L (long mode) flag to indicate its a descriptor for a 64 bit code segment
+
+; Macro flags:
+M_CREAT_IG: equ 0           ; Create a interrupt gate descriptor
+M_CREAT_TG: equ 1           ; Create a trap gate descriptor
+
+; IDT constants
+IG_FLAG_ID: equ (3<<9)      ; bits that identify the desciptor as a interrupt gate
+TG_FLAG_ID: equ (7<<8)      ; bits that identify the desciptor as a trap gate
