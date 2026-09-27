@@ -139,5 +139,5 @@ M_CREAT_IG: equ 0           ; Create a interrupt gate descriptor
 M_CREAT_TG: equ 1           ; Create a trap gate descriptor
 
 ; IDT constants
-IG_FLAG_ID: equ (3<<9)      ; bits that identify the desciptor as a interrupt gate
-TG_FLAG_ID: equ (7<<8)      ; bits that identify the desciptor as a trap gate
+IG_FLAG_ID: equ (0b1110<<8) ; bits that identify the desciptor as a interrupt gate
+TG_FLAG_ID: equ (0b1111<<8) ; bits that identify the desciptor as a trap gate
