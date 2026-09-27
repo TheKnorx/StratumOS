@@ -32,7 +32,7 @@ GDTR:
     dw              GDT_END - GDT - 1   ; 16-Bit Limit
     dd              GDT                 ; 32-Bit Baseaddress
 
-align 8                         ;
+align 8                         ; align the GDT on a 8 byte boundary
 global GDT
 GDT:
     dq 0x0000000000000000       ; Null Descriptor
