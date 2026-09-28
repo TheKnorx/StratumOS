@@ -85,7 +85,7 @@ GDT_END:
 ; 1) Descriptor to generate - trap or interrupt gate
 ; 2) 1 offset           - 16 bit
 ; 3) segment selector   - 16 bit
-; 4) flags: P(16), DPL(13), D(11)   - 16 bit
+; 4) flags: P(16-1), DPL(13-1), D(11-1)   - 16 bit
 ; 5) 2 offset           - 16 bit
 ; 6) 3 offset           - 32 bit
 
