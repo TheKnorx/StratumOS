@@ -290,7 +290,7 @@ EFER_LM_ENABLE      equ 1 << 8      ; Bit of the EFER to enable Long Mode (EFER.
 ;PDPT_ADDR           equ 0x2000      ; address of PDPT   = 0x1000 + 4096 * 1
 ;PDT_ADDR            equ 0x3000      ; address of PDT    = 0x2000 + 4096 * 1
 ;PT_ADDR             equ 0x13000     ; address of PT     = 0x3000 + 4096 * 16
-PT_ADDR_MASK        equ 0xffffffffff000 ; the page table only uses certain parts of the actual address
+PT_ADDR_MASK        equ 0xFFFFF000 ; the page table only uses certain parts of the actual address
 PT_PRESENT          equ 1           ; marks the entry as in use
 PT_WRITABLE         equ 0x02        ; marks the entry as writable
 ENTRIES_PER_PT      equ 512         ; entries per page table
