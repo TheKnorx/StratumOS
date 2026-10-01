@@ -98,8 +98,10 @@ check_multiboot:
     je      .multiboot          ; we were booted my multiboot
     ; else, we were not - print an error message
     .no_multiboot:
+        push    edi         ; preserve register
         mov     edi, err_no_multiboot
         call    print_str
+        pop     edi         ; restore register
         mov     eax, 0
         ret
     .multiboot:
@@ -121,14 +123,20 @@ check_mbi:
         mov     eax, 1
         ret
     .is_not_aligned:
+        push    edi         ; preserve register
         mov     edi, err_mbi_misaligned
         call    print_str
+        pop     edi         ; restore register
         mov     eax, 0
         ret
 
 ; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
 ; void print_str(char* str);
 print_str:
+    ; preserve registers
+    push    esi
+    push    edi
+
     mov     esi, edi
     mov     edi, VGA_BUFFER
 
@@ -143,6 +151,8 @@ print_str:
         inc     edi
         jmp     .move_chars_to_vga
     .done:
+        pop     edi
+        pop     esi
         ret
 
 loop:
