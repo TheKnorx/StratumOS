@@ -18,7 +18,7 @@ $(x86_64_build_path)/%.s: $(x86_64_src_path)/%.asm
 # make object files from preprocessor assembly files ==> .s -> .o
 $(x86_64_build_path)/%.o: $(x86_64_build_path)/%.s
 	mkdir -p $(dir $@)
-	nasm -f elf64 $< -o $@
+	nasm -Werror -f elf64 $< -o $@
 
 # make object files from C files ==> .c -> .o
 $(x86_64_build_path)/%.o: $(x86_64_src_path)/%.c
