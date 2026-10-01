@@ -94,7 +94,7 @@ start:
 ; returns eax = 1 if loaded by multiboot; 0 otherwise
 check_multiboot:
     cmp     eax, MULTIBOOT2_BOOTLOADER_MAGIC
-    je      .multiboot          ; we were booted my multiboot
+    je      .multiboot      ; we were booted my multiboot
     ; else, we were not - print an error message
     .no_multiboot:
         push    edi         ; preserve register
