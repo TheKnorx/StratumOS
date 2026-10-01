@@ -19,6 +19,7 @@ LongMode:
     mov     rdi, hello_str
     call    print_str64
 
+    mov     rdi, rbx    ; pass to the kernel the address of the multiboot information structure
     call    kernel_main
 
     cli
