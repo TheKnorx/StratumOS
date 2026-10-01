@@ -85,6 +85,7 @@ start:
     mov     ss, ax
     ; sti
 
+    ; implicitly "pass" EBX, holding the address to the multiboot information structure
     jmp far GDT.Code:LongMode   ; jump to the 64 bit code using a far jump
 
 ; Am I booted by a multiboot-compliant boot loader?
