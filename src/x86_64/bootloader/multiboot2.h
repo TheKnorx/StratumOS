@@ -15,6 +15,10 @@
 /*  Flags set in the 'flags' member of the multiboot header. */
 #define MULTIBOOT_HEADER_TAG_END  0
 #define MULTIBOOT_ARCHITECTURE_I386  0
+#define MULTIBOOT_HEADER_TAG_OPTIONAL 1
+
+/*  Multiboot header tags */
+#define MULTIBOOT_HEADER_TAG_FRAMEBUFFER  5
 
 
 /*

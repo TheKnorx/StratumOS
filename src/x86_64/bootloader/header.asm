@@ -17,7 +17,16 @@ multiboot_header:
     dd      multiboot_header_end - multiboot_header
     /*  checksum */
     dd      -(MULTIBOOT2_HEADER_MAGIC + MULTIBOOT_ARCHITECTURE_I386 + (multiboot_header_end - multiboot_header))
-; <tags>
+align 8    ; align: tag % 8 = 0
+framebuffer_tag_start:
+    dw      MULTIBOOT_HEADER_TAG_FRAMEBUFFER             ; type = Framebuffer
+    dw      MULTIBOOT_HEADER_TAG_OPTIONAL                ; flags (1 = optional)
+    dd      framebuffer_tag_end - framebuffer_tag_start  ; size of tag (excluding type, flags, size)
+    dd      1024         ; preferred width
+    dd      768          ; preferred height
+    dd      32           ; preferred bits per pixel
+framebuffer_tag_end:
+align 8    ; align: tag % 8 = 0
 tag_end:  ; terminate the tags
     dw      MULTIBOOT_HEADER_TAG_END
     dw      0
