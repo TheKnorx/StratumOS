@@ -175,7 +175,7 @@ err_no_LM:
 
 section .bss
 ; Our stack area.
-align 16
+alignb 16
 global stack_bottom
 stack_bottom:
     resb    STACK_SIZE
