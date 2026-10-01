@@ -89,11 +89,10 @@ start:
     jmp far GDT.Code:LongMode   ; jump to the 64 bit code using a far jump
 
 ; Am I booted by a multiboot-compliant boot loader?
+; Check if the signature passed to us in eax
+; matches the bootloaders magic number
 ; returns eax = 1 if loaded by multiboot; 0 otherwise
 check_multiboot:
-    ; Check if the signature passed to us in eax
-    ; matches the bootloaders magic number
-
     cmp     eax, MULTIBOOT2_BOOTLOADER_MAGIC
     je      .multiboot          ; we were booted my multiboot
     ; else, we were not - print an error message
@@ -109,11 +108,11 @@ check_multiboot:
         ret
 
 ; Is the multiboot information structure aligned correctly?
+; Check if the multiboot information structure pointed to by ebx
+; is aligned correctly. Fist 3 bits have to be cleared.
+; --> address needs to *not* be divisible by 8
 ; returns eax = 1 if mbi is aligned; 0 otherwise
 check_mbi:
-    ; Check if the multiboot information structure pointed to by ebx
-    ; is aligned correctly. Fist 3 bits have to be cleared.
-    ; --> address needs to *not* be divisible by 8
 
     mov     edx, ebx        ; copy ebx into edx
     and     edx, 0x07       ; check alignment
