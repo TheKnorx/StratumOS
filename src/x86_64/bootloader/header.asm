@@ -21,6 +21,6 @@ multiboot_header:
 tag_end:  ; terminate the tags
     dw      MULTIBOOT_HEADER_TAG_END
     dw      0
-    dw      8
+    dd      8
 multiboot_header_end:
 
