@@ -72,7 +72,7 @@ start:
 ;.setupPaging end
 
     lgdt    [GDTR]              ; load that shit (load the global descriptor table)
-    lidt    [IDTR]              ; load the interrupt descriptor table register
+    ;lidt    [IDTR]              ; load the interrupt descriptor table register
 
     ; Set all the segment registers
     cli
