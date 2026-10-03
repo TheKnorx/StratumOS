@@ -28,6 +28,9 @@ start:
     push    0
     popfd
 
+    ; Set up COM1 communication for debug messages from the bootloader
+    call    init_COM1
+
     ; Check if we where booted by a multiboot compliant
     ; bootloader by verifying the signature in eax
     call    check_multiboot
