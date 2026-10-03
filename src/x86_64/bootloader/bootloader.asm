@@ -43,7 +43,6 @@ start:
     cmp     eax, 0x00
     jz      loop            ; the check encountered an error, so we halt execution
 
-
     mov     edi, hello_message
     call    print_str
 
