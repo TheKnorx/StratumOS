@@ -39,31 +39,31 @@ serial_putc:
         test    al, LSR_THRE; check the state of the THRE bit
         jz      .wait       ; do it again if THRE was not set
     OUT     COM1, [esp+4]   ; write the char saved in stack on COM1
-    ret     4               ; return and remove the char from stack
+    ret
 
 ; print a null terminated string to COM1
 ; pointer to string is expexted on stack
 global serial_puts
 serial_puts:
-    push    esi             ; preserve esp
-
-    xor     ecx, ecx        ; clear counter
-    xor     eax, eax        ; clear eax register
     mov     esi, [esp + 4]  ; move the pointer to the char array into esp
+    push    esi             ; preserve esp
+    xor     ecx, ecx        ; clear counter
 
     ; iterate through all the chars in the string until the null terminator
     .for:
-        mov     al, [esi + ecx]    ; base + index*scale + displacement
+        xor     eax, eax    ; clear eax register
+        mov     al, [esi + ecx]    ; base + index
         test    al, al      ; check if al contains the null terminator
         jz      .end_for    ; if so, exit the loop
         push    eax         ; else put the char onto the stack
         call    serial_putc
+        pop     eax         ; pop into dummy register eax
         inc     ecx         ; increment counter
         jmp     .for        ; continue the loop
     .end_for:
 
     pop     esi
-    ret     4               ; return and remove the pointer to the array from stack
+    ret
 
 section .rodata:
 COM1:       equ     0x03F8  ; Port address for serial port COM1
