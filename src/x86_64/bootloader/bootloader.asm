@@ -160,7 +160,7 @@ loop:
 
 section .rodata
 hello_message:
-    db      "Hello World!", 0
+    db      "Hello World!", 0x00
 info_no_A20:
     db      "A20 line not supported. Continuing...", 0x00
 /* Error messages: */
