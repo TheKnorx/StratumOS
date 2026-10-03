@@ -17,6 +17,7 @@ bits 32
 
 extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging64, setupPaging64_16GiB, enable_LM
 extern GDTR, GDT, GDT.Code, LongMode, GDT.Data, IDTR
+extern init_COM1, serial_puts, serial_putc
 
 global start
 start:
