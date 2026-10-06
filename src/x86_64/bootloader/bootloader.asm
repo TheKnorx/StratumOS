@@ -177,9 +177,6 @@ err_no_LM:
     db      "CPU does not support long mode", 0x0A, 0x00
 
 section .bss
-global FRAMEBUF_ADDR
-FRAMEBUF_ADDR:  resq    0x01    ; address for grub initialised framebuffer
-
 ; Our stack area.
 alignb 16
 global stack_bottom
