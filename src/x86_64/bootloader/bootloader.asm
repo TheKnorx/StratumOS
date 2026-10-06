@@ -41,6 +41,7 @@ start:
     jz      loop            ; the check encountered an error, so we halt execution
 
     ; Check if the multiboot information structure is aligned correctly
+    mov     edi, ebx        ; move pointer to multiboot information structure into edi
     call    check_mbi
     cmp     eax, 0x00
     jz      loop            ; the check encountered an error, so we halt execution
