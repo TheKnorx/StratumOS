@@ -125,10 +125,8 @@ check_mbi:
         mov     eax, 1
         ret
     .is_not_aligned:
-        push    edi         ; preserve register
         mov     edi, err_mbi_misaligned
         call    serial_puts
-        pop     edi         ; restore register
         mov     eax, 0
         ret
 
