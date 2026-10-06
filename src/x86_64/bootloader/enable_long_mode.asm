@@ -174,8 +174,6 @@ setupPaging64_16GiB:
     ; [base + index*scale + displacement]
 
     ; preserve registers
-    push    edi
-    push    esi
     push    ebx
 
     ; First, clear the tables
@@ -270,8 +268,6 @@ setupPaging64_16GiB:
 
     ; Finally restore all the saved registers
     pop     ebx
-    pop     esi
-    pop     edi
     ret
 
 
