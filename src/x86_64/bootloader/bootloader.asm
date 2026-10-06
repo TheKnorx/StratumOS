@@ -8,7 +8,7 @@
 ; macro for printing an error and stopping execution
 %macro HANDLE_ERROR 1
     mov     edi, %1
-    call    print_str
+    call    serial_puts
     jmp     $
 %endmacro
 
@@ -44,7 +44,7 @@ start:
     jz      loop            ; the check encountered an error, so we halt execution
 
     mov     edi, hello_message
-    call    print_str
+    call    serial_puts
 
 .check_CPUID:  ; check if CPUID is supported
     call    checkCPUID
@@ -66,7 +66,7 @@ start:
     ; there is nothing left to do, so we have to give up.
     ; The only thing we can do is to inform the user about this
     mov     edi, info_no_A20
-    call    print_str
+    call    serial_puts
 .setupPaging:
     call    disablePaging       ; has no return value
     call    setupPaging64_16GiB ; set up paging for 64 bit
@@ -102,7 +102,7 @@ check_multiboot:
     .no_multiboot:
         push    edi         ; preserve register
         mov     edi, err_no_multiboot
-        call    print_str
+        call    serial_puts
         pop     edi         ; restore register
         mov     eax, 0
         ret
@@ -127,7 +127,7 @@ check_mbi:
     .is_not_aligned:
         push    edi         ; preserve register
         mov     edi, err_mbi_misaligned
-        call    print_str
+        call    serial_puts
         pop     edi         ; restore register
         mov     eax, 0
         ret
