@@ -29,11 +29,13 @@ start:
     push    0
     popfd
 
+    push    eax             ; preserve the multiboot signature
     ; Set up COM1 communication for debug messages from the bootloader
     call    init_COM1
 
     ; Check if we where booted by a multiboot compliant
     ; bootloader by verifying the signature in eax
+    pop     edi             ; restore the multiboot signature into edi
     call    check_multiboot
     cmp     eax, 0x00
     jz      loop            ; the check encountered an error, so we halt execution
