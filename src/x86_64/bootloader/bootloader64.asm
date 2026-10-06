@@ -16,8 +16,8 @@ LongMode:
     mov     rdx, 0x140000000
     mov     rax, [rdx]  ; access an address at 5 GiB
 
-    mov     rdi, hello_str
-    call    print_str64
+    ; mov     rdi, hello_str
+    ; call    print_str64
 
     mov     rdi, rbx    ; pass to the kernel the address of the multiboot information structure
     call    kernel_main
@@ -28,7 +28,7 @@ LongMode:
 ; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
 ; void print_str(char* str);
 global print_str64
-print_str64:
+print_str64_DEPRECATED:
     mov     rsi, rdi
     mov     rdi, VGA_BUFFER
 
