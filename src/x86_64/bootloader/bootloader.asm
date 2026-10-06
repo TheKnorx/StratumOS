@@ -163,18 +163,18 @@ loop:
 
 section .rodata
 hello_message:
-    db      "Hello World!", 0x00
+    db      "Hello World!", 0x0A, 0x00
 info_no_A20:
-    db      "A20 line not supported. Continuing...", 0x00
+    db      "A20 line not supported. Continuing...", 0x0A, 0x00
 /* Error messages: */
 err_no_multiboot:
-    db      "Not loaded by mutliboot", 0x00
+    db      "Not loaded by mutliboot", 0x0A, 0x00
 err_mbi_misaligned:
-    db      "Multiboot information structure is missaligned", 0x00
+    db      "Multiboot information structure is missaligned", 0x0A, 0x00
 err_no_CPUID:
-    db      "CPUID is not supported", 0x00
+    db      "CPUID is not supported", 0x0A, 0x00
 err_no_LM:
-    db      "CPU does not support long mode", 0x00
+    db      "CPU does not support long mode", 0x0A, 0x00
 
 section .bss
 global FRAMEBUF_ADDR
