@@ -134,7 +134,7 @@ check_mbi:
 
 ; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
 ; void print_str(char* str);
-print_str:
+print_str_DEPRECATED:
     ; preserve registers
     push    esi
     push    edi
