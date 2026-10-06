@@ -20,3 +20,11 @@ Planed is the implementation of the most used Linux syscalls,
 ## Threads, Contexts, 
 Planed is the implementation of threading, context switching and the use of multiple (virtual) CPU cores, allowing for 
 processes to run simultaneously.
+
+## Coding
+### General
+- All functions have a short description of what they do and what they return 
+- Only explanation-worthy code will be commented (except in assembly)
+
+### Assembly:
+- All assembly code uses the System V ABI 64 convention. This also applies for 32 bit code for convenience
