@@ -29,7 +29,7 @@ init_COM1:
     OUT     COM1 + 4, 0x03  ; IRQs disabled, RTS/DSR set
     ret
 
-; put a char on COM1; char is expected as stack parameter
+; put a char on COM1; char is expected in edi (/ dil)
 global serial_putc
 serial_putc:
     ; Check in a "loop" whether we can send something or not;
@@ -38,31 +38,32 @@ serial_putc:
         IN      COM1 + 5    ; get
         test    al, LSR_THRE; check the state of the THRE bit
         jz      .wait       ; do it again if THRE was not set
-    OUT     COM1, [esp+4]   ; write the char saved in stack on COM1
+    mov     eax, edi        ; move the char from edi into eax
+    OUT     COM1, al        ; write the char saved in al on COM1
     ret
 
-; print a null terminated string to COM1
-; pointer to string is expexted on stack
+; print a null terminated string to COM1; char is expected in edi
 global serial_puts
 serial_puts:
-    mov     esi, [esp + 4]  ; move the pointer to the char array into esp
-    push    esi             ; preserve esp
-    xor     ecx, ecx        ; clear counter
+    push    ebx             ; preserve ebx
+    mov     esi, edi        ; move the pointer to the char array from edi into esi
+    xor     ebx, ebx        ; use ebx as the counter
 
     ; iterate through all the chars in the string until the null terminator
     .for:
         xor     eax, eax    ; clear eax register
-        mov     al, [esi + ecx]    ; base + index
+        mov     al, [esi + ebx]    ; base + index
         test    al, al      ; check if al contains the null terminator
         jz      .end_for    ; if so, exit the loop
-        push    eax         ; else put the char onto the stack
-        call    serial_putc
-        pop     eax         ; pop into dummy register eax
-        inc     ecx         ; increment counter
+        push    esi         ; preserver esi from function call
+        mov     edi, eax    ; move eax into edi
+        call    serial_putc ; char in edi/dil
+        pop     esi         ; restore esi
+        inc     ebx         ; increment counter
         jmp     .for        ; continue the loop
     .end_for:
 
-    pop     esi
+    pop     ebx             ; restore ebx
     ret
 
 section .rodata:
