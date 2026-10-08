@@ -1,4 +1,5 @@
 ; File containing all the COM1 stuff
+%include "common.asm.inc"
 
 bits 32  ; this all has to be compiled in 32 bit!
 
@@ -45,6 +46,8 @@ serial_putc:
 ; print a null terminated string to COM1; char is expected in edi
 global serial_puts
 serial_puts:
+    ENTER
+
     push    ebx             ; preserve ebx
     mov     esi, edi        ; move the pointer to the char array from edi into esi
     xor     ebx, ebx        ; use ebx as the counter
@@ -64,6 +67,7 @@ serial_puts:
     .end_for:
 
     pop     ebx             ; restore ebx
+    LEAVE
     ret
 
 section .rodata:
