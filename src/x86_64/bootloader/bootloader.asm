@@ -7,9 +7,13 @@
 
 ; macro for printing an error and stopping execution
 %macro HANDLE_ERROR 1
+    PRINT_MSG   %1
+    jmp     $
+%endmacro
+
+%macro PRINT_MSG 1
     mov     edi, %1
     call    serial_puts
-    jmp     $
 %endmacro
 
 section .text
@@ -46,8 +50,7 @@ start:
     cmp     eax, 0x00
     jz      loop            ; the check encountered an error, so we halt execution
 
-    mov     edi, hello_message
-    call    serial_puts
+    PRINT_MSG hello_message
 
 .check_CPUID:  ; check if CPUID is supported
     call    checkCPUID
@@ -61,6 +64,7 @@ start:
     jnz     .enable_A20     ; if supported, continue
     HANDLE_ERROR err_no_LM  ; else throw an error
 .enable_A20:
+    PRINT_MSG status_LM_supported
     ; enable the A20 line if possible...
     call    try_enable_A20
     test    eax, eax
@@ -75,10 +79,13 @@ start:
     call    setupPaging64_16GiB ; set up paging for 64 bit
     call    enable_LM           ; enable long mode before enabeling 64 bit paging
     call    enablePaging64      ; has no return value
+    PRINT_MSG status_paging
 ;.setupPaging end
 
     lgdt    [GDTR]              ; load that shit (load the global descriptor table)
+    PRINT_MSG status_GDT
     ;lidt    [IDTR]              ; load the interrupt descriptor table register
+    ; PRINT_MSG status_IDT
 
     ; Set all the segment registers
     cli
@@ -91,6 +98,7 @@ start:
     mov     ss, ax
     ; sti
 
+    PRINT_MSG info_load_BOOTLOADER64
     ; implicitly "pass" EBX, holding the address to the multiboot information structure
     jmp far GDT.Code:LongMode   ; jump to the 64 bit code using a far jump
 
@@ -163,8 +171,20 @@ loop:
 section .rodata
 hello_message:
     db      "Hello World!", 0x0A, 0x00
+/* Debug/Info messages */
 info_no_A20:
     db      "A20 line not supported. Continuing...", 0x0A, 0x00
+info_load_BOOTLOADER64:
+    db      "Loading 64 bit bootloader", 0x0A, 0x00
+/* Status messages */
+status_LM_supported:
+    db      "Enabled long mode", 0x0A, 0x00
+status_paging:
+    db      "Enabled paging", 0x0A, 0x00
+status_GDT:
+    db      "Loaded GDT", 0x0A, 0x00
+status_IDT:
+    db      "Loaded IDT", 0x0A, 0x00
 /* Error messages: */
 err_no_multiboot:
     db      "Not loaded by mutliboot", 0x0A, 0x00
