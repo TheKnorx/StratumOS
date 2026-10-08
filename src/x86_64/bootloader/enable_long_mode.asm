@@ -7,7 +7,7 @@
 ; 4) Disable 32-Bit paging
 ; 5) Enable 64-Bit paging
 
-%include "common.asm.inc"
+#include "common.asm.inc"
 
 section .text
 bits 32
@@ -17,7 +17,7 @@ bits 32
 ; returns eax = 1 if there is cpuid support; 0 otherwise
 global 	checkCPUID
 checkCPUID:
-    ENTER
+    ENTER_32
 
     pushfd 					; retrieve the EFLAGS from the CPU and push them onto stack
     pop 	eax 			; pop them into eax
@@ -43,10 +43,10 @@ checkCPUID:
     jnz 	.supported
     .notSupported: 			; eax == ecx, so CPUID is not supported
         mov	eax, 0
-        LEAVE_RET
+        LEAVE_32_RET
     .supported: 			; eax != ecx, so CPUID is supported
         mov eax, 1
-        LEAVE_RET
+        LEAVE_32_RET
 
 ; Checks is long mode (LM) is supported by the CPU by first determining 
 ; the CPU's supports of extended functions, and then checking whether
@@ -177,7 +177,7 @@ setupPaging64_16GiB:
     ; Destination Index (edi): Points to the table that is filled into esi
     ; [base + index*scale + displacement]
 
-    ENTER
+    ENTER_32
     ; preserve registers
     push    ebx
 
@@ -273,7 +273,7 @@ setupPaging64_16GiB:
 
     ; Finally restore all the saved registers
     pop     ebx
-    LEAVE
+    LEAVE_32
     ret
 
 

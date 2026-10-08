@@ -17,7 +17,7 @@
 ; Test if A20 is enabled in a loop with a time-out (as the fast A20 method may work slowly)
 ; If none of the above worked, give up
 
-%include "common.asm.inc"
+#include "common.asm.inc"
 
 bits 32
 
@@ -63,7 +63,7 @@ is_A20_on_slow:
 ; This function has no return value
 global  enable_A20_keyboard_controller
 enable_A20_keyboard_controller:
-        ENTER
+        ENTER_32
 
         cli                     ; disable interrupts
 
@@ -94,17 +94,17 @@ enable_A20_keyboard_controller:
 
         call    .a20wait
         sti                     ; reactivate interrupts
-        LEAVE_RET
+        LEAVE_32_RET
     .a20wait:                   ; wait until input buffer is clear
             in      al,0x64
             test    al,2
             jnz     .a20wait
-            LEAVE_RET
+            LEAVE_32_RET
     .a20wait2:                  ; wait until response byte has arrived
             in      al,0x64
             test    al,1
             jz      .a20wait2
-            LEAVE_RET
+            LEAVE_32_RET
 
 ; Try to enable the A20 Line using the Fast A20 Gate method
 ; This function has no return value
@@ -124,7 +124,7 @@ enable_A20_fast_gate:
 ; Returns eax = 1 if the A20 line is set; 0 otherwise;
 global  try_enable_A20
 try_enable_A20:
-    ENTER
+    ENTER_32
 
     ; preserve registers
     push ebx
@@ -165,7 +165,7 @@ try_enable_A20:
         ; fall through
     .return:
         pop     ebx         ; restore ebx
-        LEAVE
+        LEAVE_32
         ret
 
     ; logic for checking if the A20 line is enabled

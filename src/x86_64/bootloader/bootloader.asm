@@ -1,4 +1,4 @@
-#include "multiboot2.h"
+#include "../multiboot2.h"
 
 %define STACK_SIZE      0x4000    ; have 16 KiB as stack size
 
