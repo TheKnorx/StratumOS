@@ -1,5 +1,6 @@
 %define VGA_BUFFER      0xB8000
 %define COLOR_FORMAT    0x1f
+%define STACK_SIZE64    8 * 1024 * 1024  ; 1 MiB
 
 bits 64
 
@@ -9,7 +10,7 @@ extern stack_top, kernel_main
 global LongMode
 LongMode:
     ; Reset the stack pointer and the base pointer for long mode (64 bit)
-    mov     rsp, stack_top
+    mov     rsp, stack_top64
     mov     rbp, rsp
 
     ; FOR DEBUGGING: test if paging was setup correctly - otherwise this should result in a #GP
@@ -47,3 +48,12 @@ print_str64_DEPRECATED:
 
 section .rodata
 hello_str: db "Hello from long mode!", 0x00
+
+section .bss
+; Our stack area for 64 bit
+alignb 16
+global stack_bottom64
+stack_bottom64:
+    resb    STACK_SIZE64
+global stack_top64
+stack_top64:
