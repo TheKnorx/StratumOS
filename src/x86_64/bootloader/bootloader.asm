@@ -47,7 +47,7 @@ start:
     ; Check if the multiboot information structure is aligned correctly
     mov     edi, ebx        ; move pointer to multiboot information structure into edi
     call    check_mbi
-    cmp     eax, 0x00
+    test    eax, eax
     jz      loop            ; the check encountered an error, so we halt execution
 
     PRINT_MSG hello_message
