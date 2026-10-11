@@ -37,6 +37,8 @@
  * by the preprocessor if processing assembly files
  */
 #ifndef __ASSEMBLER__
+#include <sys/types.h>
+
 #include "kernel/modules/common.h"
 
 #define ADD_TO_VOID_PTR(PTR, OFFSET) ((void*)((__uint64_t)PTR + OFFSET))
