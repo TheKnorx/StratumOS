@@ -41,7 +41,7 @@ start:
     ; bootloader by verifying the signature in eax
     pop     edi             ; restore the multiboot signature into edi
     call    check_multiboot
-    cmp     eax, 0x00
+    test    eax, eax
     jz      loop            ; the check encountered an error, so we halt execution
 
     ; Check if the multiboot information structure is aligned correctly
