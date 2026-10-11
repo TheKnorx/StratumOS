@@ -67,7 +67,7 @@ serial_puts:
     .end_for:
 
     pop     ebx             ; restore ebx
-    LEAVE
+    LEAVE_32
     ret
 
 section .rodata:
