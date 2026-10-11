@@ -15,6 +15,6 @@ bits 32
 
 ; do the epilog and return
 %macro LEAVE_32_RET 0
-    LEAVE
+    LEAVE_32
     ret
 %endmacro
