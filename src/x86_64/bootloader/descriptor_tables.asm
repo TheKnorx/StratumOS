@@ -85,23 +85,25 @@ GDT_END:
 ; 1) Descriptor to generate - trap or interrupt gate
 ; 2) 1 offset           - 16 bit
 ; 3) segment selector   - 16 bit
-; 4) flags: P(16-1), DPL(13-1), D(11-1)   - 16 bit
-; 5) 2 offset           - 16 bit
-; 6) 3 offset           - 32 bit
+; 4) Interrupt Stack Table (IST)            - 3 bits
+; 5) flags: P(16-1), DPL(13-1), D(11-1)     - 16 bit
+; 6) 2 offset           - 16 bit
+; 7) 3 offset           - 32 bit
 
 %macro BUILD_IDT_DESCRIPTOR 5
-    IDT.%{%IG_off1}:    dw  %2  ; 1 offset
-    IDT.%{%IG_ss}:      dw  %3  ; segment selector
+    IDT.%{%off1}:    dw  %2  ; 1 offset
+    IDT.%{%ss}:      dw  %3  ; segment selector
 
     %if %1 == M_CREAT_IG
-        IDT.%{%IF_flags}:   dw  IG_FLAG_ID | %4  ; combine the IG identifier with the IG flags
+        IDT.%{%IG_flags}:   dw  IG_FLAG_ID | 5% | %4    ; combine the IG identifier with the IG flags and the IST
     %elseif %1 == M_CREAT_TG
-        IDT.%{%IF_flags}:   dw  TG_FLAG_ID | %4  ; combine the TG identifier with the TG flags
+        IDT.%{%TG_flags}:   dw  TG_FLAG_ID | %5 | %4    ; combine the TG identifier with the TG flags and the IST
     %else %error "IDT descriptor builder: Received invalid descriptor type"
     %endif
 
-    IDT.%{%IG_off2}:    dw  %5  ; 2 offset
-    IDT.%{%IG_off3}:    dd  %6  ; 3 offset
+    IDT.%{%off2}:   dw  %5  ; 2 offset
+    IDT.%{%off3}:   dd  %6  ; 3 offset
+    IDT.%{%reserved}:dd  0x00000000     ; reserved 32 bit
 %endmacro
 
 global IDTR
