@@ -2,6 +2,7 @@
 #include "modules/stdio.h"
 #include "modules/COM1_io.asm.h"
 #include "modules/common.h"
+#include <sys/types.h>
 
 extern void print_str64(char* format);
 void get_framebuffer_addr(void* addr, struct multiboot_tag_framebuffer_S** mbtfb_ptr);
