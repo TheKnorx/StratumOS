@@ -54,6 +54,9 @@ checkCPUID:
 ; returns eax = 1 if there is LM support; 0 otherwise
 global 	queryLongMode
 queryLongMode:
+    ; `cpuid` clobbers EAX, EBX, ECX, and EDX, so we have to preserve the ebx register
+    push    ebx
+
 	; check if the CPU supports extended requests
 	; for that, eax has to be equal or greater than 0x80000001
     mov 	eax, CPUID_EXTENSIONS
@@ -68,10 +71,13 @@ queryLongMode:
     jz 		.NoLongMode 
 
     mov 	eax, 1
-    ret
+    jmp     .return
     .NoLongMode:
     	mov 	eax, 0
-    	ret		
+    	; fall through
+    .return:
+        pop     ebx
+        ret
 
 ; Explicitly disable paging
 ; This function has no return value
