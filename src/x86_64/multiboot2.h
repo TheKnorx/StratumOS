@@ -41,8 +41,6 @@
 
 #include "kernel/modules/common.h"
 
-#define ADD_TO_VOID_PTR(PTR, OFFSET) ((void*)((__uint64_t)PTR + OFFSET))
-
 struct multiboot_tag
 {
     __uint32_t type;

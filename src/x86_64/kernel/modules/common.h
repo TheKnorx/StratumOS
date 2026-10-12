@@ -2,7 +2,6 @@
 // Created by knorx on 10/9/26.
 //
 
-#ifndef STRATUMOS_COMMON_H
-#define STRATUMOS_COMMON_H
+#pragma once
 
-#endif //STRATUMOS_COMMON_H
+#define ADD_TO_VOID_PTR(PTR, OFFSET) ((void*)((__uint64_t)PTR + OFFSET))
