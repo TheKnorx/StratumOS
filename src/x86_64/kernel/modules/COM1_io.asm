@@ -3,6 +3,8 @@
 
 bits 64
 
+#include "common.asm.inc"
+
 ; Macro for doing an OUT instruction by setting up the DX and AL registers
 ; out dx, al
 %macro OUT 2
@@ -34,6 +36,7 @@ serial_putc64:
 ; print a null terminated string to COM1; char is expected in edi
 global serial_puts64
 serial_puts64:
+    ENTER_64
     mov     rsp, rbp
     pop     rbp
 
@@ -63,6 +66,7 @@ serial_puts64:
     pop     rbx             ; restore rbx
     mov     rsp, rbp
     pop     rbp
+    LEAVE_64
     ret
 
 section .rodata:
