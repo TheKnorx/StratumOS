@@ -38,7 +38,7 @@ global serial_puts64
 serial_puts64:
     ENTER_64
     mov     rsp, rbp
-    pop     rbp
+    push    rbp
 
     push    rbx             ; preserve rbx
     mov     rsi, rdi        ; move the pointer to the char array from edi into rsi
@@ -65,7 +65,6 @@ serial_puts64:
     ; finaly, do epilog and return from function
     pop     rbx             ; restore rbx
     mov     rsp, rbp
-    pop     rbp
     LEAVE_64
     ret
 
