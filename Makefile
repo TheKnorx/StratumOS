@@ -10,7 +10,9 @@ x86_64_asm_object_files := $(patsubst $(x86_64_build_path)/%.s, $(x86_64_build_p
 x86_64_c_source_files := $(shell find $(x86_64_src_path) -name '*.c')
 x86_64_c_object_files 	:= $(patsubst $(x86_64_src_path)/%.c, $(x86_64_build_path)/%.o, $(x86_64_c_source_files))
 
-qemu_flags := -cdrom dist/x86_64/kernel.iso -serial stdio
+qemu_flags 	:= -cdrom dist/x86_64/kernel.elf -serial stdio
+# qemu_normal := -serial vc
+# qemu_debug 	:= -serial udp::4555
 
 # create the preprocessor assembly files ==> .asm -> .s
 $(x86_64_build_path)/%.s: $(x86_64_src_path)/%.asm
@@ -32,13 +34,13 @@ $(x86_64_build_path)/%.o: $(x86_64_src_path)/%.c
 .PHONY: build-x86_64
 build-x86_64: $(x86_64_asm_object_files) $(x86_64_c_object_files)
 	mkdir -p $(x86_64_dist_path)
-	ld -n -o $(x86_64_dist_path)/kernel.bin \
+	ld -n -o $(x86_64_dist_path)/kernel.elf \
 		-T $(x86_64_target_path)/linker.ld \
 		$(x86_64_asm_object_files) $(x86_64_c_object_files)
-	cp $(x86_64_dist_path)/kernel.bin \
+	cp $(x86_64_dist_path)/kernel.elf \
 		$(x86_64_target_path)/iso/boot/kernel.bin
 	grub-mkrescue /usr/lib/grub/i386-pc \
-		-o $(x86_64_dist_path)/kernel.iso \
+		-o $(x86_64_dist_path)/kernel.elf \
 		$(x86_64_target_path)/iso
 
 .PHONY: run
@@ -56,4 +58,4 @@ debug: build-x86_64
 
 .PHONY: clean
 clean:
-	rm -R ./build/ ./dist targets/x86_64/iso/boot/kernel.bin
+	rm -R ./build/ ./dist targets/x86_64/iso/boot/kernel.elf
