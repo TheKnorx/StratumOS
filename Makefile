@@ -28,7 +28,7 @@ $(x86_64_build_path)/%.o: $(x86_64_build_path)/%.s
 $(x86_64_build_path)/%.o: $(x86_64_src_path)/%.c
 	mkdir -p $(dir $@)
 	gcc -ffreestanding -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -c $< -o $@ \
-	-Wall -Wextra -Werror -pedantic -fno-stack-protector
+	-Wall -Wextra -Werror -pedantic -fno-stack-protector -g -O0
 
 # throw everything together and we have a kernel
 .PHONY: build-x86_64
