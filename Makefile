@@ -10,9 +10,9 @@ x86_64_asm_object_files := $(patsubst $(x86_64_build_path)/%.s, $(x86_64_build_p
 x86_64_c_source_files := $(shell find $(x86_64_src_path) -name '*.c')
 x86_64_c_object_files 	:= $(patsubst $(x86_64_src_path)/%.c, $(x86_64_build_path)/%.o, $(x86_64_c_source_files))
 
-qemu_flags 	:= -cdrom dist/x86_64/kernel.elf -serial stdio
-# qemu_normal := -serial vc
-# qemu_debug 	:= -serial udp::4555
+qemu_flags 	:= -cdrom dist/x86_64/kernel.elf
+qemu_normal := -serial stdio
+qemu_debug 	:= -serial vc
 
 # create the preprocessor assembly files ==> .asm -> .s
 $(x86_64_build_path)/%.s: $(x86_64_src_path)/%.asm
@@ -45,10 +45,10 @@ build-x86_64: $(x86_64_asm_object_files) $(x86_64_c_object_files)
 
 .PHONY: run
 run: build-x86_64
-	qemu-system-x86_64 $(qemu_flags)
+	qemu-system-x86_64 $(qemu_flags) $(qemu_normal)
 
 start_qemu_debug:
-	qemu-system-x86_64 $(qemu_flags) -monitor stdio -s -S -d cpu_reset
+	qemu-system-x86_64 $(qemu_flags) $(qemu_debug) -monitor stdio -s -S -d cpu_reset
 
 start_gdb_debug:
 	terminator -e "pwndbg -ex \"target remote 127.0.0.1:1234\""
