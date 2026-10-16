@@ -51,7 +51,7 @@ start_qemu_debug:
 	qemu-system-x86_64 $(qemu_flags) $(qemu_debug) -monitor stdio -s -S -d cpu_reset
 
 start_gdb_debug:
-	terminator -e "pwndbg -ex \"target remote 127.0.0.1:1234\""
+	terminator -e "pwndbg -ex \"target remote 127.0.0.1:1234\" -ex \"file targets/x86_64/iso/boot/kernel.bin\""
 
 debug: build-x86_64
 	make -j 2 start_qemu_debug start_gdb_debug
