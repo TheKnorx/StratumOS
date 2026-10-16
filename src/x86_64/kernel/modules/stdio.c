@@ -50,8 +50,8 @@ int fflush() {
             for (int pixel_row_i = 0; pixel_row_i < FONT_SIZE; pixel_row_i++) {
                 for (int pixel_i = 7; pixel_i >= 0; pixel_i--) {
                     if (char_bitmap[pixel_row_i] & (1 << pixel_i)) {
-                        __uint32_t* pixel = ADD_TO_VOID_PTR(__framebuffer_ptr, (current_position.y+pixel_row_i) * __framebuffer_pitch +
-                            (current_position.x+pixel_i) * 4);
+                        __uint32_t* pixel = ADD_TO_VOID_PTR(__framebuffer_ptr,
+                            (current_position.y+pixel_row_i) * __framebuffer_pitch + (current_position.x+pixel_i) * 4);
                         *pixel = WHITE_COLOR;  // should be red
                     }
                 }
