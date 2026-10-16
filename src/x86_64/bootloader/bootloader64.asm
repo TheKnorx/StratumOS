@@ -5,7 +5,7 @@
 bits 64
 
 section .text
-extern stack_top, kernel_main
+extern stack_top, kernel_main, serial_puts64
 
 global LongMode
 LongMode:
@@ -24,6 +24,9 @@ LongMode:
     call    kernel_main
 
     cli
+    mov     rdi, good_bye_str
+    call    serial_puts64
+
     hlt
 
 ; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
@@ -47,7 +50,8 @@ print_str64_DEPRECATED:
         ret
 
 section .rodata
-hello_str: db "Hello from long mode!", 0x00
+hello_str: db "Hello from long mode!", 0x0A, 0x00
+good_bye_str:   db  "Shutting down. Good bye!", 0x0A, 0x00
 
 section .bss
 ; Our stack area for 64 bit
