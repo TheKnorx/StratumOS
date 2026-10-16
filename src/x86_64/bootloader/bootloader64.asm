@@ -23,12 +23,12 @@ LongMode:
     mov     rdi, rbx    ; pass to the kernel the address of the multiboot information structure
     call    kernel_main
 
-    jmp     $
-
     mov     rdi, good_bye_str
     call    serial_puts64
 
+halt:
     hlt
+    jmp     halt
 
 ; print a null-termianted string, whos pointer is located in edi, to the VGA buffer
 ; void print_str(char* str);
