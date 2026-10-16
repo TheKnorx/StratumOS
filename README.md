@@ -4,6 +4,9 @@ Experimental x86-64 operating system and ELF runtime
 
 <br><br>
 ## Milestones 🗿:
+### Commit `8267cb7`
+Implemented the rendering of font in the framebuffer via a text buffer. 
+
 ### Commit `14cb9b5`
 Implemented PML4T paging with PAE for mapping 16 GiB into the virtual address space.
 
