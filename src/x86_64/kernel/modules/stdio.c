@@ -7,7 +7,7 @@
  * the line and the pixels for the new line */
 #define NEWLINE_PXS 3
 /* Padding between text and display end */
-#define START_PADDING 50
+#define START_PADDING 5
 /* Number of pixels between the letters */
 #define SPACING 2
 #define WHITE_COLOR 0x00FFFFFF
