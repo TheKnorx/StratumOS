@@ -37,9 +37,8 @@
  * by the preprocessor if processing assembly files
  */
 #ifndef __ASSEMBLER__
+#pragma once
 #include <sys/types.h>
-
-#include "kernel/modules/common.h"
 
 struct multiboot_tag
 {
