@@ -39,7 +39,13 @@ void __init_framebuffer(void* addr) {
     __framebuffer_ptr = (void*)multiboot_tag_framebuffer -> common.framebuffer_addr;
     __framebuffer_pitch = multiboot_tag_framebuffer->common.framebuffer_pitch;
 
-    *(char**)__buffer = "Hello World!";
+    const char hello[] = "Hello World!\0";
+    for (int i = 0;; i++) {
+        const char c = hello[i];
+
+        __buffer[0][i] = c;
+        if (c == '\0') return;
+    }
 }
 
 // for now, we only support flushing to stdout
