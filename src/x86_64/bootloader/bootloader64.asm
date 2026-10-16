@@ -23,7 +23,8 @@ LongMode:
     mov     rdi, rbx    ; pass to the kernel the address of the multiboot information structure
     call    kernel_main
 
-    cli
+    jmp     $
+
     mov     rdi, good_bye_str
     call    serial_puts64
 
