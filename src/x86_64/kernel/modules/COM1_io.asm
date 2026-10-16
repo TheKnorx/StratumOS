@@ -33,7 +33,7 @@ serial_putc64:
     OUT     COM1, al        ; write the char saved in al on COM1
     ret
 
-; print a null terminated string to COM1; char is expected in edi
+; print a null terminated string to COM1; char is expected in rdi
 global serial_puts64
 serial_puts64:
     ENTER_64
