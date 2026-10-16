@@ -45,7 +45,7 @@ void __init_framebuffer(void* addr) {
 // for now, we only support flushing to stdout
 int fflush() {
     for (int entry_i = 0; entry_i < FRAMEBUFFER_ENTRY_SZ; entry_i++) {
-        for (int char_i = 0; char_i < FRAMEBUFFER_BUFFER_SZ; char_i++) {
+        for (int char_i = 0; char_i < FRAMEBUFFER_ENTRY_SZ; char_i++) {
             const unsigned char* char_bitmap = *(font8x8_basic + __buffer[entry_i][char_i]);
             for (int pixel_row_i = 0; pixel_row_i < FONT_SIZE; pixel_row_i++) {
                 for (int pixel_i = 7; pixel_i >= 0; pixel_i--) {
