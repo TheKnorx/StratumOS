@@ -9,6 +9,13 @@ void get_framebuffer_addr(void* addr, struct multiboot_tag_framebuffer_S** mbtfb
 # define __UNUSED_VAR __attribute__((unused));
 
 void kernel_main(const unsigned long addr) {
+    __init_framebuffer((void*)addr);
+
+    fflush();
+    // puts("Hello World!\n");
+
+    return;
+
     struct multiboot_tag_framebuffer_S * mbtf;
     get_framebuffer_addr((void*)addr, &mbtf);
     const void * fb = (void*)mbtf -> common.framebuffer_addr;
