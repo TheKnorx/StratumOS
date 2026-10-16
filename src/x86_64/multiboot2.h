@@ -125,6 +125,6 @@ struct multiboot_tag_framebuffer_S
             __uint8_t framebuffer_blue_mask_size;
         };
     };
-} multiboot_tag_framebuffer_T;
+};
 
 #endif
