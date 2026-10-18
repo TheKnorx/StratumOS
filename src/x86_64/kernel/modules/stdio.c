@@ -6,7 +6,7 @@
 
 /* Distance of pixels between the bottom of
  * the line and the pixels for the new line */
-#define NEWLINE_PXS 3
+#define NEWLINE_PXS 7
 /* Padding between text and display end */
 #define START_PADDING 5
 /* Number of pixels between the letters */
