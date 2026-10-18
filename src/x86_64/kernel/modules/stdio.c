@@ -2,6 +2,7 @@
 #include "../assets/font8x8.h"
 #include "common.h"
 #include "../../multiboot2.h"
+#include "core.lib.asm.h"
 
 /* Distance of pixels between the bottom of
  * the line and the pixels for the new line */
@@ -25,6 +26,9 @@ typedef struct position_S {
 } position_T;
 static position_T current_position = {.x = START_PADDING, .y = START_PADDING};
 static char __buffer[FRAMEBUFFER_ENTRY_SZ][FRAMEBUFFER_ENTRY_SZ];  // buffer to write all the letters into to flush into the framebuffer
+#define __BUFIDX_ENTRY 0
+#define __BUFIDX_CHAR 1
+static int __buffer_idx[2] = {0, 0};  // the first index points to the current entry, the second to the next free char
 
 
 void __init_framebuffer(void* addr) {
@@ -39,27 +43,31 @@ void __init_framebuffer(void* addr) {
     __framebuffer_ptr = (void*)multiboot_tag_framebuffer -> common.framebuffer_addr;
     __framebuffer_pitch = multiboot_tag_framebuffer->common.framebuffer_pitch;
 
-    const char hello[] = "Hello World!\0";
+    const char hello[] = "12345687!";
     for (int i = 0;; i++) {
         const char c = hello[i];
 
         __buffer[0][i] = c;
-        if (c == '\0') return;
+        if (c == '\0') break;
     }
 }
 
 // for now, we only support flushing to stdout
 int fflush() {
+    current_position.x = START_PADDING;
+    current_position.y = START_PADDING;
+
     for (int entry_i = 0; entry_i < FRAMEBUFFER_ENTRY_SZ; entry_i++) {
         for (int char_i = 0; char_i < FRAMEBUFFER_ENTRY_SZ; char_i++) {
             const unsigned char* char_bitmap = *(font8x8_basic + __buffer[entry_i][char_i]);
             for (int pixel_row_i = 0; pixel_row_i < FONT_SIZE; pixel_row_i++) {
                 for (int pixel_i = 7; pixel_i >= 0; pixel_i--) {
-                    if (char_bitmap[pixel_row_i] & (1 << pixel_i)) {
-                        __uint32_t* pixel = ADD_TO_VOID_PTR(__framebuffer_ptr,
+                    __uint32_t* pixel = ADD_TO_VOID_PTR(__framebuffer_ptr,
                             (current_position.y+pixel_row_i) * __framebuffer_pitch + (current_position.x+pixel_i) * 4);
-                        *pixel = WHITE_COLOR;  // should be red
+                    if (char_bitmap[pixel_row_i] & (1 << pixel_i)) {
+                        *pixel = WHITE_COLOR;  // should be white
                     }
+                    else *pixel = 0x00000000;  // should be... I have no idea
                 }
             }
             current_position.x += FONT_SIZE;
@@ -76,18 +84,31 @@ int printf(const char *__restrict __attribute__((unused)) format, ...) {
     return 0;
 }
 
-void handle_newline() {
-
-}
-
 int putchar(const int c) {
+    __buffer[__buffer_idx[__BUFIDX_ENTRY]][__buffer_idx[__BUFIDX_CHAR]] = c;
+
+    /* first check if we are within bounds for that next buffer write */
+    if (__buffer_idx[__BUFIDX_CHAR]+1 >= FRAMEBUFFER_ENTRY_SZ || c == '\n') {
+        if (__buffer_idx[__BUFIDX_ENTRY+1] >= FRAMEBUFFER_ENTRY_SZ) {
+            /* Leave the entry index as it were and make room for one more line at the bottom.
+            * We do this by moving all lines of the buffer one entry to the top
+            * to make room for another emtpy entry at the bottom
+            */
+            memcpy(__buffer, ADD_TO_VOID_PTR(__buffer, FRAMEBUFFER_ENTRY_SZ),
+                   FRAMEBUFFER_BUFFER_SZ - FRAMEBUFFER_ENTRY_SZ);
+        }
+        else {
+            __buffer_idx[__BUFIDX_ENTRY]++;
+        }
+        __buffer_idx[__BUFIDX_CHAR] = 0;
+    }
+    else {
+        __buffer_idx[__BUFIDX_CHAR]++;
+    }
     return c;
 }
 
 int puts(const char *s) {
-    __uint32_t* pixel = ADD_TO_VOID_PTR(__framebuffer_ptr, 100 * __framebuffer_pitch + 100 * 4);
-    *pixel = 0x00FF0000;  // should be red
-
     int i;
     for (i = 0; s[i] != '\0'; i++) putchar(s[i]);
     fflush();
