@@ -6,7 +6,6 @@
 
 extern void print_str64(char* format);
 void get_framebuffer_addr(void* addr, struct multiboot_tag_framebuffer_S** mbtfb_ptr);
-# define __UNUSED_VAR __attribute__((unused));
 
 void kernel_main(const unsigned long addr) {
     __init_framebuffer((void*)addr);
