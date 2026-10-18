@@ -11,8 +11,7 @@ void get_framebuffer_addr(void* addr, struct multiboot_tag_framebuffer_S** mbtfb
 void kernel_main(const unsigned long addr) {
     __init_framebuffer((void*)addr);
 
-    fflush();
-    // puts("Hello World!\n");
+    puts("Hello World!\nTHis is a test\nNewline!\n\0\0");
 
     return;
 
