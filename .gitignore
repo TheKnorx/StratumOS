@@ -63,3 +63,4 @@ dist/
 .idea/
 git-excluded-files/
 .gdb_history
+src/x86_64/kernel/assets/font8x8
