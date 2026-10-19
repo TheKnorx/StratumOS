@@ -1,3 +1,6 @@
+%ifndef COMMON_ASM_INC
+%define COMMON_ASM_INC
+
 bits 32
 ; macro for doing the prolog
 %macro ENTER_32 0
@@ -40,3 +43,5 @@ bits 64
     LEAVE_64
     ret
 %endmacro
+
+%endif
