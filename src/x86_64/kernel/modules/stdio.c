@@ -79,6 +79,10 @@ int fflush() {
     return 0;
 }
 
+void clear_screen() {
+    memset(IO_buffer, 0x00, FRAMEBUFFER_BUFFER_SZ);  // just clear the buffer
+}
+
 int printf(const char *__restrict __attribute__((unused)) format, ...) {
     format = format + 1;
     return 0;
