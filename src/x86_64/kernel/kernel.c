@@ -8,7 +8,7 @@ extern void print_str64(char* format);
 void get_framebuffer_addr(void* addr, struct multiboot_tag_framebuffer_S** mbtfb_ptr);
 
 void kernel_main(const unsigned long addr) {
-    __init_framebuffer((void*)addr);
+    init_framebuffer((void*)addr);
 
     puts("Hello World!\nTHis is a test\nNewline!\n\0\0");
 

@@ -4,7 +4,7 @@
 
 #pragma once
 
-void __init_framebuffer(void* addr);
+void init_framebuffer(void* addr);
 int fflush();
 extern int printf (const char *__restrict __format, ...);
 int putchar(int c);
