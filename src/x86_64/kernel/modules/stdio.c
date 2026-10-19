@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "../assets/font8x8.h"
 #include "common.h"
-#include "../../multiboot2.h"
+#include "multiboot2.h"
 #include "core.lib.asm.h"
 
 /* Distance of pixels between the bottom of

@@ -1,4 +1,4 @@
-#include "../multiboot2.h"
+#include "multiboot2.h"
 #include "modules/stdio.h"
 #include "modules/COM1_io.asm.h"
 #include "modules/common.h"

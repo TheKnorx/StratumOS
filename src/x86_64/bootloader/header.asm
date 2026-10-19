@@ -3,7 +3,7 @@
  * For details, see https://wiki.osdev.org/Multiboot
 */
 
-#include "../multiboot2.h"
+#include "multiboot2.h"
 
 /*  Align 64 bits boundary. */
 align  8

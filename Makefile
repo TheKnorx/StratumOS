@@ -14,21 +14,25 @@ qemu_flags 	:= -cdrom dist/x86_64/kernel.elf
 qemu_normal := -serial stdio
 qemu_debug 	:= -serial vc
 
+GCC_FLAGS := -Wall -Wextra -Werror -pedantic -fno-stack-protector -g -O0
+NASM_FLAGS := -Werror -f elf64
+INCLUDE_DIRS := -Isrc/x86_64/common  # include all the common stuff
+
 # create the preprocessor assembly files ==> .asm -> .s
 $(x86_64_build_path)/%.s: $(x86_64_src_path)/%.asm
 	mkdir -p $(dir $@)
-	cpp -x assembler-with-cpp  $< -o $@
+	cpp $(INCLUDE_DIRS) -x assembler-with-cpp  $< -o $@
 
 # make object files from preprocessor assembly files ==> .s -> .o
 $(x86_64_build_path)/%.o: $(x86_64_build_path)/%.s
 	mkdir -p $(dir $@)
-	nasm -Werror -f elf64 $< -o $@
+	nasm $(NASM_FLAGS) $(INCLUDE_DIRS) $< -o $@
 
 # make object files from C files ==> .c -> .o
 $(x86_64_build_path)/%.o: $(x86_64_src_path)/%.c
 	mkdir -p $(dir $@)
-	gcc -ffreestanding -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -c $< -o $@ \
-	-Wall -Wextra -Werror -pedantic -fno-stack-protector -g -O0
+	gcc -ffreestanding -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 \
+	$(GCC_FLAGS) $(INCLUDE_DIRS) -c $< -o $@
 
 # throw everything together and we have a kernel
 .PHONY: build-x86_64
