@@ -1,6 +1,6 @@
 #include "multiboot2.h"
 #include "modules/stdio.h"
-#include "modules/COM1_io.asm.h"
+#include "COM1_io.asm.h"
 #include "modules/common.h"
 #include <sys/types.h>
 
