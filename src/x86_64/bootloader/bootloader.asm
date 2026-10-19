@@ -13,7 +13,7 @@
 
 %macro PRINT_MSG 1
     mov     edi, %1
-    call    serial_puts
+    call    serial_puts32
 %endmacro
 
 section .text
@@ -21,7 +21,7 @@ bits 32
 
 extern checkCPUID, queryLongMode, try_enable_A20, disablePaging, enablePaging64, setupPaging64_16GiB, enable_LM
 extern GDTR, GDT, GDT.Code, LongMode, GDT.Data, IDTR
-extern init_COM1, serial_puts, serial_putc
+extern init_COM1_32, serial_puts32, serial_putc32
 
 global start
 start:
@@ -35,7 +35,7 @@ start:
 
     push    eax             ; preserve the multiboot signature
     ; Set up COM1 communication for debug messages from the bootloader
-    call    init_COM1
+    call    init_COM1_32
 
     ; Check if we where booted by a multiboot compliant
     ; bootloader by verifying the signature in eax
@@ -73,7 +73,7 @@ start:
     ; there is nothing left to do, so we have to give up.
     ; The only thing we can do is to inform the user about this
     mov     edi, info_no_A20
-    call    serial_puts
+    call    serial_puts32
 .setupPaging:
     call    disablePaging       ; has no return value
     call    setupPaging64_16GiB ; set up paging for 64 bit
@@ -113,7 +113,7 @@ check_multiboot:
     .no_multiboot:
         push    edi         ; preserve register
         mov     edi, err_no_multiboot
-        call    serial_puts
+        call    serial_puts32
         pop     edi         ; restore register
         mov     eax, 0
         ret
@@ -135,7 +135,7 @@ check_mbi:
         ret
     .is_not_aligned:
         mov     edi, err_mbi_misaligned
-        call    serial_puts
+        call    serial_puts32
         mov     eax, 0
         ret
 

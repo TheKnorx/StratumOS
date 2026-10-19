@@ -21,21 +21,6 @@
 
 bits 32  ; this all has to be compiled in 32 bit!
 
-; Macro for doing an OUT instruction by setting up the DX and AL registers
-; out dx, al
-%macro OUT 2
-    mov     dx, %1          ; port in dx
-    mov     al, %2          ; byte to write in al
-    out     dx, al          ; do the IO write
-%endmacro
-
-; Macro for doing an IN instruction by setting up the DX register
-; in al, dx
-%macro IN 1
-    mov     dx, %1          ; port in dx
-    in      al, dx          ; result in al
-%endmacro
-
 ; Initialise COM1
 global init_COM1_32
 init_COM1_32:
@@ -95,21 +80,6 @@ serial_puts32:
 bits 64
 
 #include "common.asm.inc"
-
-; Macro for doing an OUT instruction by setting up the DX and AL registers
-; out dx, al
-%macro OUT 2
-    mov     dx, %1          ; port in dx
-    mov     al, %2          ; byte to write in al
-    out     dx, al          ; do the IO write
-%endmacro
-
-; Macro for doing an IN instruction by setting up the DX register
-; in al, dx
-%macro IN 1
-    mov     dx, %1          ; port in dx
-    in      al, dx          ; result in al
-%endmacro
 
 ; put a char on COM1; char is expected in rdi (/ dil)
 global serial_putc64
