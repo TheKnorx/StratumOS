@@ -18,20 +18,20 @@
 #define FRAMEBUFFER_BUFFER_SZ (FRAMEBUFFER_ENTRY_SZ * FRAMEBUFFER_ENTRY_SZ)
 
 struct multiboot_tag_framebuffer_S * multiboot_tag_framebuffer;
-static void* __framebuffer_ptr;
-static __uint32_t __framebuffer_pitch;
+static void* framebuffer_ptr;
+static __uint32_t framebuffer_pitch;
 typedef struct position_S {
     __uint32_t x;
     __uint32_t y;
 } position_T;
 static position_T current_position = {.x = START_PADDING, .y = START_PADDING};
-static char __buffer[FRAMEBUFFER_ENTRY_SZ][FRAMEBUFFER_ENTRY_SZ];  // buffer to write all the letters into to flush into the framebuffer
-#define __BUFIDX_ENTRY 0
-#define __BUFIDX_CHAR 1
-static int __buffer_idx[2] = {0, 0};  // the first index points to the current entry, the second to the next free char
+static char buffer[FRAMEBUFFER_ENTRY_SZ][FRAMEBUFFER_ENTRY_SZ];  // buffer to write all the letters into to flush into the framebuffer
+#define BUFIDX_ENTRY 0
+#define BUFIDX_CHAR 1
+static int buffer_idx[2] = {0, 0};  // the first index points to the current entry, the second to the next free char
 
 
-void __init_framebuffer(void* addr) {
+void init_framebuffer(void* addr) {
     for (const struct multiboot_tag *tag = (struct multiboot_tag *) (ADD_TO_VOID_PTR(addr, 8));
         tag -> type != MULTIBOOT_TAG_TYPE_END;
         tag = (struct multiboot_tag * )((__uint8_t * ) tag + ((tag -> size + 7) & ~7))) {
@@ -40,14 +40,14 @@ void __init_framebuffer(void* addr) {
             break;
         }
     }
-    __framebuffer_ptr = (void*)multiboot_tag_framebuffer -> common.framebuffer_addr;
-    __framebuffer_pitch = multiboot_tag_framebuffer->common.framebuffer_pitch;
+    framebuffer_ptr = (void*)multiboot_tag_framebuffer -> common.framebuffer_addr;
+    framebuffer_pitch = multiboot_tag_framebuffer->common.framebuffer_pitch;
 
     const char hello[] = "12345687!";
     for (int i = 0;; i++) {
         const char c = hello[i];
 
-        __buffer[0][i] = c;
+        buffer[0][i] = c;
         if (c == '\0') break;
     }
 }
@@ -59,11 +59,11 @@ int fflush() {
 
     for (int entry_i = 0; entry_i < FRAMEBUFFER_ENTRY_SZ; entry_i++) {
         for (int char_i = 0; char_i < FRAMEBUFFER_ENTRY_SZ; char_i++) {
-            const unsigned char* char_bitmap = *(font8x8_basic + __buffer[entry_i][char_i]);
+            const unsigned char* char_bitmap = *(font8x8_basic + buffer[entry_i][char_i]);
             for (int pixel_row_i = 0; pixel_row_i < FONT_SIZE; pixel_row_i++) {
                 for (int pixel_i = 7; pixel_i >= 0; pixel_i--) {
-                    __uint32_t* pixel = ADD_TO_VOID_PTR(__framebuffer_ptr,
-                            (current_position.y+pixel_row_i) * __framebuffer_pitch + (current_position.x+pixel_i) * 4);
+                    __uint32_t* pixel = ADD_TO_VOID_PTR(framebuffer_ptr,
+                            (current_position.y+pixel_row_i) * framebuffer_pitch + (current_position.x+pixel_i) * 4);
                     if (char_bitmap[pixel_row_i] & (1 << pixel_i)) {
                         *pixel = WHITE_COLOR;  // should be white
                     }
@@ -85,25 +85,25 @@ int printf(const char *__restrict __attribute__((unused)) format, ...) {
 }
 
 int putchar(const int c) {
-    __buffer[__buffer_idx[__BUFIDX_ENTRY]][__buffer_idx[__BUFIDX_CHAR]] = c;
+    buffer[buffer_idx[BUFIDX_ENTRY]][buffer_idx[BUFIDX_CHAR]] = (char)c;
 
     /* first check if we are within bounds for that next buffer write */
-    if (__buffer_idx[__BUFIDX_CHAR]+1 >= FRAMEBUFFER_ENTRY_SZ || c == '\n') {
-        if (__buffer_idx[__BUFIDX_ENTRY+1] >= FRAMEBUFFER_ENTRY_SZ) {
+    if (buffer_idx[BUFIDX_CHAR]+1 >= FRAMEBUFFER_ENTRY_SZ || c == '\n') {
+        if (buffer_idx[BUFIDX_ENTRY+1] >= FRAMEBUFFER_ENTRY_SZ) {
             /* Leave the entry index as it were and make room for one more line at the bottom.
             * We do this by moving all lines of the buffer one entry to the top
             * to make room for another emtpy entry at the bottom
             */
-            memcpy(__buffer, ADD_TO_VOID_PTR(__buffer, FRAMEBUFFER_ENTRY_SZ),
+            memcpy(buffer, ADD_TO_VOID_PTR(buffer, FRAMEBUFFER_ENTRY_SZ),
                    FRAMEBUFFER_BUFFER_SZ - FRAMEBUFFER_ENTRY_SZ);
         }
         else {
-            __buffer_idx[__BUFIDX_ENTRY]++;
+            buffer_idx[BUFIDX_ENTRY]++;
         }
-        __buffer_idx[__BUFIDX_CHAR] = 0;
+        buffer_idx[BUFIDX_CHAR] = 0;
     }
     else {
-        __buffer_idx[__BUFIDX_CHAR]++;
+        buffer_idx[BUFIDX_CHAR]++;
     }
     return c;
 }
