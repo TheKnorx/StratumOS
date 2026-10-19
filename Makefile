@@ -58,4 +58,4 @@ debug: build-x86_64
 
 .PHONY: clean
 clean:
-	rm -R ./build/ ./dist targets/x86_64/iso/boot/kernel.elf
+	rm -R ./build/ ./dist targets/x86_64/iso/boot/kernel.bin
