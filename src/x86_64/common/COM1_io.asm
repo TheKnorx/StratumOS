@@ -63,7 +63,7 @@ serial_puts32:
         jz      .end_for    ; if so, exit the loop
         push    esi         ; preserver esi from function call
         mov     edi, eax    ; move eax into edi
-        call    serial_putc ; char in edi/dil
+        call    serial_putc32   ; char in edi/dil
         pop     esi         ; restore esi
         inc     ebx         ; increment counter
         jmp     .for        ; continue the loop
