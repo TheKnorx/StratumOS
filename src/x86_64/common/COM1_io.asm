@@ -2,6 +2,21 @@
 ; File containing all the COM1 stuff for the bootloader
 ; ---------------------------------------------------------------------------------
 
+; Macro for doing an OUT instruction by setting up the DX and AL registers
+; out dx, al
+%macro OUT 2
+    mov     dx, %1          ; port in dx
+    mov     al, %2          ; byte to write in al
+    out     dx, al          ; do the IO write
+%endmacro
+
+; Macro for doing an IN instruction by setting up the DX register
+; in al, dx
+%macro IN 1
+    mov     dx, %1          ; port in dx
+    in      al, dx          ; result in al
+%endmacro
+
 #include "common.asm.inc"
 
 bits 32  ; this all has to be compiled in 32 bit!
