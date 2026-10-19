@@ -16,7 +16,7 @@ qemu_debug 	:= -serial vc
 
 GCC_FLAGS := -Wall -Wextra -Werror -pedantic -fno-stack-protector -g -O0
 NASM_FLAGS := -Werror -f elf64
-INCLUDE_DIRS := -Isrc/x86_64/common  # include all the common stuff
+INCLUDE_DIRS := -Isrc/x86_64/common -Isrc/x86_64/kernel
 
 # create the preprocessor assembly files ==> .asm -> .s
 $(x86_64_build_path)/%.s: $(x86_64_src_path)/%.asm
