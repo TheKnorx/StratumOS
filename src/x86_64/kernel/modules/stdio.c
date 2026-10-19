@@ -25,7 +25,7 @@ typedef struct position_S {
     __uint32_t y;
 } position_T;
 static position_T current_position = {.x = START_PADDING, .y = START_PADDING};
-static char buffer[FRAMEBUFFER_ENTRY_SZ][FRAMEBUFFER_ENTRY_SZ];  // buffer to write all the letters into to flush into the framebuffer
+static char IO_buffer[FRAMEBUFFER_ENTRY_SZ][FRAMEBUFFER_ENTRY_SZ];  // buffer to write all the letters into to flush into the framebuffer
 #define BUFIDX_ENTRY 0
 #define BUFIDX_CHAR 1
 static int buffer_idx[2] = {0, 0};  // the first index points to the current entry, the second to the next free char
@@ -47,7 +47,7 @@ void init_framebuffer(void* addr) {
     for (int i = 0;; i++) {
         const char c = hello[i];
 
-        buffer[0][i] = c;
+        IO_buffer[0][i] = c;
         if (c == '\0') break;
     }
 }
@@ -59,7 +59,7 @@ int fflush() {
 
     for (int entry_i = 0; entry_i < FRAMEBUFFER_ENTRY_SZ; entry_i++) {
         for (int char_i = 0; char_i < FRAMEBUFFER_ENTRY_SZ; char_i++) {
-            const unsigned char* char_bitmap = *(font8x8_basic + buffer[entry_i][char_i]);
+            const unsigned char* char_bitmap = *(font8x8_basic + IO_buffer[entry_i][char_i]);
             for (int pixel_row_i = 0; pixel_row_i < FONT_SIZE; pixel_row_i++) {
                 for (int pixel_i = 7; pixel_i >= 0; pixel_i--) {
                     __uint32_t* pixel = ADD_TO_VOID_PTR(framebuffer_ptr,
@@ -89,7 +89,7 @@ int printf(const char *__restrict __attribute__((unused)) format, ...) {
 }
 
 int putchar(const int c) {
-    buffer[buffer_idx[BUFIDX_ENTRY]][buffer_idx[BUFIDX_CHAR]] = (char)c;
+    IO_buffer[buffer_idx[BUFIDX_ENTRY]][buffer_idx[BUFIDX_CHAR]] = (char)c;
 
     /* first check if we are within bounds for that next buffer write */
     if (buffer_idx[BUFIDX_CHAR]+1 >= FRAMEBUFFER_ENTRY_SZ || c == '\n') {
@@ -98,7 +98,7 @@ int putchar(const int c) {
             * We do this by moving all lines of the buffer one entry to the top
             * to make room for another emtpy entry at the bottom
             */
-            memcpy(buffer, ADD_TO_VOID_PTR(buffer, FRAMEBUFFER_ENTRY_SZ),
+            memcpy(IO_buffer, ADD_TO_VOID_PTR(IO_buffer, FRAMEBUFFER_ENTRY_SZ),
                    FRAMEBUFFER_BUFFER_SZ - FRAMEBUFFER_ENTRY_SZ);
         }
         else {
